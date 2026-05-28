@@ -62,12 +62,9 @@
             <h1 class="text-xl font-extrabold tracking-tight text-stone-900 flex items-center leading-none">
               Stay<span class="text-amber-600 font-medium">Connect</span>
             </h1>
-            <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold mt-0.5">Luxury Directory & Search</p>
+            <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold mt-0.5">by Lucky Agency</p>
           </div>
         </div>
-        <span class="md:hidden text-xs bg-amber-50 px-2.5 py-1 rounded-full text-amber-700 font-semibold border border-amber-200/50">
-          Light Haven
-        </span>
       </div>
 
       <!-- Search Box with automatic search trigger -->
@@ -94,8 +91,6 @@
         </div>
         <span class="h-6 w-px bg-stone-200"></span>
         <div class="flex items-center gap-2 pr-1">
-          <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span class="text-xs text-stone-600 font-semibold uppercase tracking-wider">Light Themed Edition</span>
         </div>
       </div>
     </header>
@@ -153,7 +148,7 @@
             </button>
           </div>
           <p class="text-[11px] text-stone-400 leading-relaxed -mt-1.5 font-medium">Show only properties available on your favorite platform:</p>
-          <div class="grid grid-cols-2 gap-2" id="platform-filter-grid">
+          <div class="grid grid-cols-3 gap-2" id="platform-filter-grid">
             <!-- Platform buttons injected programmatically -->
           </div>
         </div>
@@ -461,6 +456,16 @@
                 <h4 class="text-xs uppercase tracking-widest text-stone-400 font-extrabold">Available Booking Options</h4>
                 <div class="flex flex-col gap-2" id="modal-booking-links-list">
                   <!-- booking partner blocks injected programmatically -->
+                </div>
+              </div>
+
+              <!-- Lifestyle & Local Convenience Links -->
+              <div class="space-y-3">
+                <h4 class="text-xs uppercase tracking-widest text-stone-400 font-extrabold flex items-center gap-1.5 prose">
+                  <i data-lucide="compass" class="w-3.5 h-3.5 text-amber-600"></i> Lifestyle &amp; Navigation
+                </h4>
+                <div class="grid grid-cols-2 gap-2" id="modal-lifestyle-links">
+                  <!-- lifestyle links injected programmatically -->
                 </div>
               </div>
 
@@ -934,12 +939,12 @@
       };
 
       const platformIcons = {
-        booking: "🌐",
+        booking: "https://upload.wikimedia.org/wikipedia/commons/b/be/Booking.com_logo.svg",
         traveloka: "✈️",
         agoda: "🗝️",
         expedia: "💼",
         trip: "🌏",
-        airbnb: "🏡"
+        airbnb: "https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg"
       };
 
       const socialNames = {
@@ -1095,17 +1100,31 @@
         const platGrid = document.getElementById('platform-filter-grid');
         platGrid.innerHTML = Object.keys(platformNames).map(plat => {
           const isActive = activePlatform === plat;
+          const icon = platformIcons[plat];
+          const hasLogo = icon.startsWith("http");
           return `
             <button
               data-platform-id="${plat}"
-              class="platform-btn p-2.5 rounded-xl border text-left transition-all flex flex-col gap-1.5 ${
+              class="platform-btn h-11 rounded-xl border flex items-center justify-center transition-all p-2 ${
                 isActive
-                  ? 'bg-amber-50/60 border-amber-300 text-amber-950 font-semibold shadow-xs'
-                  : 'bg-stone-50/50 hover:bg-white border-stone-200 text-stone-650 hover:text-stone-850 hover:border-stone-300'
+                  ? 'bg-amber-50/60 border-amber-300 shadow-[0_1px_2px_rgba(217,119,6,0.1)] ring-1 ring-amber-300/25'
+                  : 'bg-stone-50/50 hover:bg-white border-stone-200/80 hover:border-stone-300'
               }"
+              title="${platformNames[plat]}"
             >
-              <span class="text-base">${platformIcons[plat]}</span>
-              <span class="text-[11px] font-bold tracking-tight truncate leading-none">${platformNames[plat]}</span>
+              ${hasLogo ? `
+                <img
+                  src="${icon}"
+                  alt="${platformNames[plat]}"
+                  class="h-[18px] w-auto max-w-[56px] object-contain flex shrink-0"
+                  referrerPolicy="no-referrer"
+                />
+              ` : `
+                <div class="flex items-center gap-1 justify-center min-w-0">
+                  <span class="text-sm shrink-0">${icon}</span>
+                  <span class="text-[10px] font-bold text-stone-600 truncate">${platformNames[plat]}</span>
+                </div>
+              `}
             </button>
           `;
         }).join('');
@@ -1313,11 +1332,24 @@
           
           // Generate Booking Icons
           const bookingsKeys = Object.keys(hotel.bookingLinks);
-          const channelIconsLine = bookingsKeys.slice(0, 3).map(key => `
-            <span class="text-xs" title="${platformNames[key]}">
-              ${platformIcons[key]}
-            </span>
-          `).join('');
+          const channelIconsLine = bookingsKeys.slice(0, 3).map(key => {
+            const icon = platformIcons[key];
+            const hasLogo = icon.startsWith("http");
+            return `
+              <span class="inline-flex items-center justify-center h-[20px] px-1.5 bg-stone-55 border border-stone-150 rounded" title="${platformNames[key]}">
+                ${hasLogo ? `
+                  <img
+                    src="${icon}"
+                    alt="${key}"
+                    class="h-[11px] w-auto max-w-[36px] object-contain flex shrink-0"
+                    referrerPolicy="no-referrer"
+                  />
+                ` : `
+                  <span class="text-[10px] leading-none shrink-0">${icon}</span>
+                `}
+              </span>
+            `;
+          }).join('');
 
           // Generate Amenities Pills
           const amenitiesLine = hotel.amenities.slice(0, 3).map(ame => `
@@ -1613,8 +1645,9 @@
         // Compute Direct Booking Links
         const linksList = document.getElementById('modal-booking-links-list');
         linksList.innerHTML = Object.entries(hotel.bookingLinks).map(([key, url]) => {
-          const icon = platformIcons[key];
+          const iconUrl = platformIcons[key];
           const name = platformNames[key];
+          const hasLogo = iconUrl.startsWith("http");
           return `
             <a
               href="${url}"
@@ -1623,9 +1656,20 @@
               class="bg-white border border-stone-200 hover:border-amber-600 p-3 rounded-xl flex items-center justify-between transition-all hover:scale-101 shadow-xs"
             >
               <div class="flex items-center gap-3">
-                <span class="text-xl">${icon}</span>
+                <div class="w-16 h-8 bg-stone-50 rounded-lg flex items-center justify-center p-1.5 border border-stone-150 shrink-0">
+                  ${hasLogo ? `
+                    <img
+                      src="${iconUrl}"
+                      alt="${name}"
+                      class="h-[18px] w-auto max-w-[48px] object-contain flex shrink-0"
+                      referrerPolicy="no-referrer"
+                    />
+                  ` : `
+                    <span class="text-base font-bold leading-none shrink-0">${iconUrl}</span>
+                  `}
+                </div>
                 <div>
-                  <span class="text-xs font-bold text-stone-850 leading-none block">${name} Partner</span>
+                  <span class="text-xs font-bold text-stone-855 leading-none block">${name} Partner</span>
                   <span class="text-[10px] text-stone-400 leading-none mt-1 block">Calculate and lock in direct rate</span>
                 </div>
               </div>
@@ -1636,6 +1680,60 @@
             </a>
           `;
         }).join('');
+
+        // Compute Lifestyle convenience platform links (Grab, Foodpanda, Google Maps, Waze)
+        const lifestyleLinks = [
+          {
+            name: "GrabFood Local",
+            sub: "Food delivery nearby",
+            url: `https://food.grab.com/my/en/restaurants?search=${encodeURIComponent(hotel.location)}`,
+            icon: "utensils",
+            textColorClass: "text-[#00B159]",
+            colorClass: "hover:border-[#00B159]/60 hover:bg-[#00B159]/5 hover:text-[#00c653]"
+          },
+          {
+            name: "Foodpanda",
+            sub: "Order local meals",
+            url: `https://www.foodpanda.my/restaurants?search=${encodeURIComponent(hotel.location)}`,
+            icon: "shopping-bag",
+            textColorClass: "text-[#D70F64]",
+            colorClass: "hover:border-[#D70F64]/60 hover:bg-[#D70F64]/5 hover:text-[#FF2B85]"
+          },
+          {
+            name: "Google Maps",
+            sub: "Navigate to resort",
+            url: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hotel.name + ', ' + hotel.location)}`,
+            icon: "map",
+            textColorClass: "text-blue-500",
+            colorClass: "hover:border-blue-500/60 hover:bg-blue-50/10 hover:text-blue-600"
+          },
+          {
+            name: "Waze GPS Maps",
+            sub: "Get active route",
+            url: `https://waze.com/ul?q=${encodeURIComponent(hotel.name + ', ' + hotel.location)}`,
+            icon: "navigation",
+            textColorClass: "text-cyan-500",
+            colorClass: "hover:border-cyan-500/60 hover:bg-cyan-50/10 hover:text-cyan-600"
+          }
+        ];
+
+        const lifestyleContainer = document.getElementById('modal-lifestyle-links');
+        lifestyleContainer.innerHTML = lifestyleLinks.map(link => `
+          <a
+            href="${link.url}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bg-white border border-stone-200/80 p-2 rounded-xl flex items-center gap-2 transition-all shrink-0 text-stone-750 text-[11px] font-semibold ${link.colorClass} shadow-3xs"
+          >
+            <div class="p-1.5 bg-stone-50 rounded-lg shrink-0 ${link.textColorClass}">
+              <i data-lucide="${link.icon}" class="w-4 h-4"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <span class="font-bold text-stone-850 leading-tight block text-ellipsis overflow-hidden">${link.name}</span>
+              <span class="text-[9px] text-stone-400 font-medium leading-none mt-0.5 block">${link.sub}</span>
+            </div>
+          </a>
+        `).join('');
 
         // Social connections lists
         const socialGrid = document.getElementById('modal-socials-row');
