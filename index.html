@@ -1,985 +1,1713 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Stay Connect — Discover Hotels</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StayConnect — Discover Luxury Hotels</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
 
-:root{
-  --bg:#0e0e12;
-  --surface:#16161d;
-  --card:#1e1e28;
-  --card2:#252533;
-  --border:rgba(255,255,255,0.07);
-  --border2:rgba(255,255,255,0.12);
-  --text:#f0f0f5;
-  --muted:#7a7a95;
-  --muted2:#55556a;
-  --accent:#e8b86d;
-  --accent2:#f5d08a;
-  --teal:#2dd4bf;
-  --white:#ffffff;
-}
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Outfit', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
+            },
+            scale: {
+              '102': '1.02',
+              '104': '1.04',
+            }
+          }
+        }
+      }
+    </script>
 
-html{scroll-behavior:smooth}
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh}
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-/* ── TOPBAR ── */
-.topbar{
-  position:sticky;top:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 2.5rem;height:62px;
-  background:rgba(14,14,18,0.92);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-}
-
-.logo{display:flex;align-items:center;gap:0.5rem;text-decoration:none}
-.logo-icon{
-  width:34px;height:34px;border-radius:9px;
-  background:linear-gradient(135deg,var(--accent),#d4963a);
-  display:flex;align-items:center;justify-content:center;
-  font-weight:800;font-size:0.85rem;color:#0e0e12;
-  flex-shrink:0;
-}
-.logo-text{font-size:1.15rem;font-weight:700;color:var(--white);letter-spacing:-0.02em}
-.logo-text span{color:var(--accent)}
-
-.search-bar{
-  display:flex;align-items:center;
-  background:var(--card);
-  border:1px solid var(--border2);
-  border-radius:10px;
-  padding:0 1rem;
-  gap:0.6rem;
-  width:340px;
-  transition:border-color 0.2s,box-shadow 0.2s;
-}
-.search-bar:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,184,109,0.1)}
-.search-bar input{
-  background:none;border:none;outline:none;
-  font-family:'Outfit',sans-serif;font-size:0.85rem;
-  color:var(--text);width:100%;padding:0.6rem 0;
-}
-.search-bar input::placeholder{color:var(--muted)}
-.search-icon{color:var(--muted);font-size:0.9rem;flex-shrink:0}
-
-.topbar-right{display:flex;align-items:center;gap:0.8rem}
-.btn-nav{
-  font-size:0.75rem;font-weight:600;letter-spacing:0.03em;
-  padding:0.5rem 1.1rem;border-radius:8px;text-decoration:none;
-  transition:all 0.2s;cursor:pointer;border:none;font-family:'Outfit',sans-serif;
-}
-.btn-ghost-nav{background:transparent;border:1px solid var(--border2);color:var(--text)}
-.btn-ghost-nav:hover{border-color:var(--accent);color:var(--accent)}
-.btn-accent-nav{background:var(--accent);color:#0e0e12}
-.btn-accent-nav:hover{background:var(--accent2);transform:translateY(-1px)}
-
-/* ── LAYOUT ── */
-.page{display:flex;min-height:calc(100vh - 62px)}
-
-/* ── SIDEBAR ── */
-.sidebar{
-  width:220px;flex-shrink:0;
-  padding:1.8rem 1.2rem;
-  border-right:1px solid var(--border);
-  position:sticky;top:62px;height:calc(100vh - 62px);
-  overflow-y:auto;
-}
-
-.sidebar-section{margin-bottom:2rem}
-.sidebar-label{
-  font-size:0.6rem;font-weight:700;letter-spacing:0.2em;
-  text-transform:uppercase;color:var(--muted);
-  margin-bottom:0.7rem;padding:0 0.4rem;
-}
-
-.filter-chip{
-  display:flex;align-items:center;gap:0.6rem;
-  padding:0.5rem 0.7rem;border-radius:8px;
-  font-size:0.8rem;font-weight:500;color:var(--muted);
-  cursor:pointer;transition:background 0.15s,color 0.15s;
-  user-select:none;
-}
-.filter-chip:hover{background:var(--card);color:var(--text)}
-.filter-chip.active{background:rgba(232,184,109,0.12);color:var(--accent);font-weight:600}
-.filter-chip .chip-dot{
-  width:7px;height:7px;border-radius:50%;
-  background:currentColor;opacity:0.6;flex-shrink:0;
-}
-
-.platform-filter{
-  display:flex;align-items:center;gap:0.6rem;
-  padding:0.45rem 0.7rem;border-radius:8px;
-  font-size:0.78rem;font-weight:500;color:var(--muted);
-  cursor:pointer;transition:all 0.15s;user-select:none;
-}
-.platform-filter:hover{background:var(--card);color:var(--text)}
-.platform-filter.active{background:rgba(45,212,191,0.1);color:var(--teal)}
-.platform-filter .pf-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
-
-/* ── MAIN FEED ── */
-.feed{flex:1;padding:2rem 2rem 4rem;min-width:0}
-
-.feed-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:1.5rem;
-}
-.feed-title{font-size:1.05rem;font-weight:700;color:var(--text)}
-.feed-count{font-size:0.78rem;color:var(--muted);margin-top:2px}
-
-.sort-row{display:flex;align-items:center;gap:0.5rem}
-.sort-btn{
-  font-family:'Outfit',sans-serif;font-size:0.73rem;font-weight:600;
-  padding:0.38rem 0.85rem;border-radius:6px;border:1px solid var(--border2);
-  background:transparent;color:var(--muted);cursor:pointer;transition:all 0.15s;
-}
-.sort-btn.active{background:var(--card2);color:var(--text);border-color:var(--border2)}
-.sort-btn:hover{color:var(--text)}
-
-/* ── HOTEL CARD GRID ── */
-.hotel-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-  gap:1.4rem;
-}
-
-.hotel-card{
-  background:var(--card);
-  border-radius:14px;
-  overflow:hidden;
-  border:1px solid var(--border);
-  cursor:pointer;
-  transition:transform 0.25s,border-color 0.25s,box-shadow 0.25s;
-  position:relative;
-}
-.hotel-card:hover{
-  transform:translateY(-4px);
-  border-color:var(--border2);
-  box-shadow:0 20px 50px rgba(0,0,0,0.4);
-}
-
-/* thumbnail */
-.card-thumb{
-  position:relative;
-  height:190px;
-  overflow:hidden;
-}
-.thumb-img{
-  width:100%;height:100%;
-  background-size:cover;background-position:center;
-  transition:transform 0.4s ease;
-}
-.hotel-card:hover .thumb-img{transform:scale(1.04)}
-
-.thumb-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(14,14,18,0.85) 0%,rgba(14,14,18,0.1) 50%,transparent 100%);
-}
-
-/* star rating badge */
-.star-badge{
-  position:absolute;top:10px;right:10px;
-  background:rgba(14,14,18,0.75);backdrop-filter:blur(8px);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:6px;padding:0.2rem 0.55rem;
-  font-size:0.72rem;font-weight:600;color:var(--accent);
-  display:flex;align-items:center;gap:3px;
-}
-
-/* photo count */
-.photo-count{
-  position:absolute;top:10px;left:10px;
-  background:rgba(14,14,18,0.75);backdrop-filter:blur(8px);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:6px;padding:0.2rem 0.55rem;
-  font-size:0.68rem;font-weight:600;color:rgba(255,255,255,0.8);
-}
-
-/* platform tags on thumbnail */
-.platform-tags{
-  position:absolute;bottom:10px;left:10px;
-  display:flex;gap:5px;flex-wrap:wrap;
-}
-.ptag{
-  height:22px;padding:0 7px;
-  background:rgba(14,14,18,0.82);backdrop-filter:blur(8px);
-  border:1px solid rgba(255,255,255,0.15);
-  border-radius:5px;
-  font-size:0.6rem;font-weight:700;letter-spacing:0.03em;
-  color:var(--white);
-  display:flex;align-items:center;gap:3px;
-  white-space:nowrap;
-}
-.ptag.booking{border-color:rgba(0,100,210,0.5);color:#60a5fa}
-.ptag.traveloka{border-color:rgba(0,160,90,0.5);color:#34d399}
-.ptag.agoda{border-color:rgba(229,68,68,0.5);color:#f87171}
-.ptag.expedia{border-color:rgba(250,180,0,0.5);color:#fbbf24}
-.ptag.trip{border-color:rgba(0,160,200,0.5);color:#38bdf8}
-.ptag.airbnb{border-color:rgba(255,90,95,0.5);color:#fb7185}
-
-/* card body */
-.card-body{padding:1rem 1rem 1.1rem}
-
-.card-location{
-  font-size:0.68rem;font-weight:600;letter-spacing:0.08em;
-  text-transform:uppercase;color:var(--muted);
-  margin-bottom:0.3rem;
-  display:flex;align-items:center;gap:4px;
-}
-
-.card-name{
-  font-size:1rem;font-weight:700;
-  color:var(--text);line-height:1.25;
-  margin-bottom:0.5rem;
-}
-
-.card-desc{
-  font-size:0.77rem;line-height:1.55;
-  color:var(--muted);
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-  margin-bottom:0.8rem;
-}
-
-.card-meta{
-  display:flex;align-items:center;justify-content:space-between;
-}
-
-.card-social{display:flex;gap:6px}
-.social-icon-sm{
-  width:24px;height:24px;border-radius:5px;
-  background:var(--card2);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:0.7rem;transition:background 0.15s;
-}
-.hotel-card:hover .social-icon-sm{background:var(--border2)}
-
-.card-cta{
-  font-size:0.7rem;font-weight:700;letter-spacing:0.05em;
-  color:var(--accent);opacity:0;
-  transition:opacity 0.2s;
-}
-.hotel-card:hover .card-cta{opacity:1}
-
-/* ── MODAL ── */
-.modal-backdrop{
-  position:fixed;inset:0;z-index:500;
-  background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);
-  display:flex;align-items:flex-start;justify-content:center;
-  padding:2rem 1rem;
-  opacity:0;pointer-events:none;
-  transition:opacity 0.3s;
-  overflow-y:auto;
-}
-.modal-backdrop.open{opacity:1;pointer-events:all}
-
-.modal{
-  background:var(--surface);
-  border:1px solid var(--border2);
-  border-radius:18px;
-  width:100%;max-width:860px;
-  overflow:hidden;
-  transform:translateY(24px) scale(0.98);
-  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
-  position:relative;flex-shrink:0;
-}
-.modal-backdrop.open .modal{transform:none}
-
-.modal-close{
-  position:absolute;top:1rem;right:1rem;z-index:10;
-  width:34px;height:34px;border-radius:50%;
-  background:rgba(14,14,18,0.8);backdrop-filter:blur(10px);
-  border:1px solid var(--border2);
-  color:var(--text);font-size:1rem;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:background 0.2s,transform 0.2s;
-}
-.modal-close:hover{background:var(--card2);transform:scale(1.1)}
-
-/* modal hero */
-.modal-hero{position:relative;height:300px;overflow:hidden}
-.modal-hero-img{width:100%;height:100%;background-size:cover;background-position:center}
-.modal-hero-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to top,var(--surface) 0%,rgba(14,14,18,0.3) 50%,transparent 100%);
-}
-.modal-hero-content{
-  position:absolute;bottom:1.5rem;left:2rem;right:5rem;
-}
-.modal-location{
-  font-size:0.68rem;font-weight:700;letter-spacing:0.12em;
-  text-transform:uppercase;color:var(--accent);margin-bottom:0.4rem;
-}
-.modal-name{
-  font-family:'Playfair Display',serif;
-  font-size:2rem;font-weight:700;line-height:1.15;
-  color:var(--white);margin-bottom:0.5rem;
-}
-.modal-stars{color:var(--accent);font-size:0.85rem;letter-spacing:2px}
-
-/* modal body */
-.modal-body{padding:0 2rem 2rem}
-
-/* gallery strip */
-.gallery-strip{
-  display:flex;gap:8px;margin-bottom:2rem;
-  overflow-x:auto;padding-bottom:4px;
-  scrollbar-width:thin;scrollbar-color:var(--border2) transparent;
-}
-.gallery-strip-item{
-  flex-shrink:0;width:110px;height:75px;
-  border-radius:8px;overflow:hidden;cursor:pointer;
-  border:2px solid transparent;transition:border-color 0.2s,transform 0.2s;
-}
-.gallery-strip-item:hover{border-color:var(--accent);transform:scale(1.03)}
-.gallery-strip-img{width:100%;height:100%;background-size:cover;background-position:center}
-
-.modal-section-title{
-  font-size:0.65rem;font-weight:700;letter-spacing:0.18em;
-  text-transform:uppercase;color:var(--muted);
-  margin-bottom:1rem;
-  display:flex;align-items:center;gap:0.5rem;
-}
-.modal-section-title::after{content:'';flex:1;height:1px;background:var(--border)}
-
-/* description */
-.modal-desc{
-  font-size:0.88rem;line-height:1.75;color:rgba(240,240,245,0.8);
-  margin-bottom:2rem;
-}
-
-/* booking platforms */
-.booking-platforms{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
-  gap:0.8rem;margin-bottom:2rem;
-}
-.booking-btn{
-  display:flex;align-items:center;gap:0.7rem;
-  padding:0.75rem 1rem;
-  background:var(--card);border:1px solid var(--border2);border-radius:10px;
-  text-decoration:none;color:var(--text);
-  font-size:0.8rem;font-weight:600;
-  transition:all 0.2s;
-}
-.booking-btn:hover{border-color:var(--accent);background:rgba(232,184,109,0.06);transform:translateY(-2px)}
-.booking-btn .b-icon{font-size:1.1rem;flex-shrink:0}
-.booking-btn .b-name{flex:1}
-.booking-btn .b-arrow{color:var(--muted);font-size:0.8rem}
-
-/* socials */
-.social-row{display:flex;gap:0.8rem;flex-wrap:wrap;margin-bottom:2rem}
-.social-btn{
-  display:flex;align-items:center;gap:0.6rem;
-  padding:0.6rem 1rem;
-  background:var(--card);border:1px solid var(--border2);border-radius:8px;
-  text-decoration:none;color:var(--text);
-  font-size:0.78rem;font-weight:600;
-  transition:all 0.2s;
-}
-.social-btn:hover{border-color:var(--teal);background:rgba(45,212,191,0.06)}
-.social-btn .s-icon{font-size:1rem}
-
-/* video section */
-.video-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:2rem}
-.video-thumb-card{
-  border-radius:10px;overflow:hidden;position:relative;cursor:pointer;
-  border:1px solid var(--border);transition:border-color 0.2s;
-}
-.video-thumb-card:hover{border-color:var(--accent)}
-.video-thumb-img{width:100%;aspect-ratio:16/9;background-size:cover;background-position:center;display:block}
-.video-play-overlay{
-  position:absolute;inset:0;background:rgba(0,0,0,0.3);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;transition:opacity 0.2s;
-}
-.video-thumb-card:hover .video-play-overlay{opacity:1}
-.play-circle{
-  width:44px;height:44px;border-radius:50%;background:var(--accent);
-  display:flex;align-items:center;justify-content:center;font-size:1rem;color:#0e0e12;
-}
-.video-label{
-  padding:0.5rem 0.7rem;font-size:0.72rem;font-weight:600;color:var(--muted);
-}
-
-/* ── ANIMATIONS ── */
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-.hotel-card{animation:fadeUp 0.4s ease both}
-
-/* stagger */
-.hotel-card:nth-child(1){animation-delay:0.05s}
-.hotel-card:nth-child(2){animation-delay:0.1s}
-.hotel-card:nth-child(3){animation-delay:0.15s}
-.hotel-card:nth-child(4){animation-delay:0.2s}
-.hotel-card:nth-child(5){animation-delay:0.25s}
-.hotel-card:nth-child(6){animation-delay:0.3s}
-.hotel-card:nth-child(7){animation-delay:0.35s}
-.hotel-card:nth-child(8){animation-delay:0.4s}
-
-/* ── RESPONSIVE ── */
-@media(max-width:900px){
-  .sidebar{display:none}
-  .topbar{padding:0 1rem}
-  .search-bar{width:200px}
-  .feed{padding:1.5rem 1rem 3rem}
-  .hotel-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
-  .modal-body{padding:0 1.2rem 1.5rem}
-  .modal-name{font-size:1.5rem}
-  .booking-platforms{grid-template-columns:1fr 1fr}
-  .video-grid{grid-template-columns:1fr}
-}
-</style>
-</head>
-<body>
-
-<!-- TOPBAR -->
-<header class="topbar">
-  <a href="#" class="logo">
-    <div class="logo-icon">SC</div>
-    <div class="logo-text">Stay<span>Connect</span></div>
-  </a>
-  <div class="search-bar">
-    <span class="search-icon">🔍</span>
-    <input type="text" placeholder="Search hotels, cities, resorts…" id="search-input"/>
-  </div>
-  <div class="topbar-right">
-    <a href="#" class="btn-nav btn-ghost-nav">List Your Hotel</a>
-    <a href="#" class="btn-nav btn-accent-nav">Sign In</a>
-  </div>
-</header>
-
-<div class="page">
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-section">
-      <div class="sidebar-label">Category</div>
-      <div class="filter-chip active" data-filter="all"><span class="chip-dot"></span>All Hotels</div>
-      <div class="filter-chip" data-filter="resort"><span class="chip-dot"></span>Beach Resorts</div>
-      <div class="filter-chip" data-filter="city"><span class="chip-dot"></span>City Hotels</div>
-      <div class="filter-chip" data-filter="boutique"><span class="chip-dot"></span>Boutique</div>
-      <div class="filter-chip" data-filter="heritage"><span class="chip-dot"></span>Heritage</div>
-      <div class="filter-chip" data-filter="villa"><span class="chip-dot"></span>Private Villa</div>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Booking Platform</div>
-      <div class="platform-filter" data-platform="booking"><span class="pf-icon">🌐</span>Booking.com</div>
-      <div class="platform-filter" data-platform="traveloka"><span class="pf-icon">✈️</span>Traveloka</div>
-      <div class="platform-filter" data-platform="agoda"><span class="pf-icon">🗝️</span>Agoda</div>
-      <div class="platform-filter" data-platform="expedia"><span class="pf-icon">💼</span>Expedia</div>
-      <div class="platform-filter" data-platform="trip"><span class="pf-icon">🌏</span>Trip.com</div>
-      <div class="platform-filter" data-platform="airbnb"><span class="pf-icon">🏡</span>Airbnb</div>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Location</div>
-      <div class="filter-chip" data-location="kuala-lumpur"><span class="chip-dot"></span>Kuala Lumpur</div>
-      <div class="filter-chip" data-location="penang"><span class="chip-dot"></span>Penang</div>
-      <div class="filter-chip" data-location="langkawi"><span class="chip-dot"></span>Langkawi</div>
-      <div class="filter-chip" data-location="sabah"><span class="chip-dot"></span>Sabah</div>
-      <div class="filter-chip" data-location="bali"><span class="chip-dot"></span>Bali</div>
-      <div class="filter-chip" data-location="singapore"><span class="chip-dot"></span>Singapore</div>
-    </div>
-  </aside>
-
-  <!-- MAIN FEED -->
-  <main class="feed">
-    <div class="feed-header">
-      <div>
-        <div class="feed-title">Discover Hotels</div>
-        <div class="feed-count" id="feed-count">12 properties found</div>
-      </div>
-      <div class="sort-row">
-        <button class="sort-btn active">Featured</button>
-        <button class="sort-btn">Newest</button>
-        <button class="sort-btn">A–Z</button>
-      </div>
-    </div>
-
-    <div class="hotel-grid" id="hotel-grid">
-      <!-- Cards injected by JS -->
-    </div>
-  </main>
-</div>
-
-<!-- MODAL -->
-<div class="modal-backdrop" id="modal-backdrop">
-  <div class="modal" id="modal">
-    <button class="modal-close" id="modal-close">✕</button>
-    <div id="modal-content"></div>
-  </div>
-</div>
-
-<script>
-// ── DATA ──
-const hotels = [
-  {
-    id:1,
-    name:"The Pearl Langkawi",
-    location:"Langkawi, Kedah",
-    category:"resort",
-    stars:5,
-    photos:38,
-    desc:"Perched above the Andaman Sea, The Pearl Langkawi is a sanctuary of over-water villas and coral gardens. Wake up to the sound of waves beneath your floor and fall asleep under an infinite sky.",
-    thumb:"linear-gradient(135deg,#0d3b52 0%,#1a6a8a 45%,#2a9a7a 100%)",
-    gallery:[
-      "linear-gradient(135deg,#0d3b52,#1a6a8a)",
-      "linear-gradient(135deg,#1a6a8a,#2a9ab0)",
-      "linear-gradient(135deg,#0d5252,#1a8a7a)",
-      "linear-gradient(135deg,#2a6a0d,#4a9a2a)",
-      "linear-gradient(135deg,#3b2d0d,#6a5a2a)",
-    ],
-    booking:{booking:"https://booking.com",traveloka:"https://traveloka.com",agoda:"https://agoda.com",expedia:"https://expedia.com"},
-    social:{instagram:"https://instagram.com",tiktok:"https://tiktok.com",facebook:"https://facebook.com",youtube:"https://youtube.com",whatsapp:"https://wa.me/60123456789"},
-    videos:[
-      {label:"Resort Overview · 3:40",thumb:"linear-gradient(135deg,#0d3b52,#1a6a8a)"},
-      {label:"Underwater Bungalow · 2:15",thumb:"linear-gradient(135deg,#1a4a6a,#2a8a9a)"},
-    ]
-  },
-  {
-    id:2,
-    name:"Kuala Lumpur Grand",
-    location:"KLCC, Kuala Lumpur",
-    category:"city",
-    stars:5,
-    photos:52,
-    desc:"Soaring 52 floors above the iconic twin towers, KL Grand delivers cosmopolitan luxury with a panoramic rooftop infinity pool and world-class Michelin-starred dining at the heart of the city.",
-    thumb:"linear-gradient(135deg,#1a1a3d 0%,#2d2d6e 45%,#8a3d9a 100%)",
-    gallery:[
-      "linear-gradient(135deg,#1a1a3d,#2d2d6e)",
-      "linear-gradient(135deg,#2d2d6e,#4d4d9a)",
-      "linear-gradient(135deg,#3d1a6e,#6e2d9a)",
-      "linear-gradient(135deg,#1a0d3b,#3b1a6a)",
-      "linear-gradient(135deg,#0d1a3b,#1a3b6a)",
-    ],
-    booking:{booking:"https://booking.com",traveloka:"https://traveloka.com",trip:"https://trip.com"},
-    social:{instagram:"https://instagram.com",facebook:"https://facebook.com",youtube:"https://youtube.com"},
-    videos:[
-      {label:"City View Suite · 2:50",thumb:"linear-gradient(135deg,#1a1a3d,#2d2d6e)"},
-      {label:"Rooftop Pool · 1:30",thumb:"linear-gradient(135deg,#2d1a4d,#4d2d7a)"},
-    ]
-  },
-  {
-    id:3,
-    name:"Eastern & Oriental",
-    location:"George Town, Penang",
-    category:"heritage",
-    stars:5,
-    photos:44,
-    desc:"A living legend since 1885. The Eastern & Oriental Hotel is Penang's most storied address — grand colonial architecture, private seafront esplanade, and suites that have hosted royalty and literary giants alike.",
-    thumb:"linear-gradient(135deg,#3d2200 0%,#7a4400 45%,#c8a96e 100%)",
-    gallery:[
-      "linear-gradient(135deg,#3d2200,#7a4400)",
-      "linear-gradient(135deg,#7a4400,#aa6600)",
-      "linear-gradient(135deg,#4d2d00,#8a5500)",
-      "linear-gradient(135deg,#2d1a00,#6a3a00)",
-      "linear-gradient(135deg,#5a3300,#9a6600)",
-    ],
-    booking:{booking:"https://booking.com",agoda:"https://agoda.com",expedia:"https://expedia.com"},
-    social:{instagram:"https://instagram.com",facebook:"https://facebook.com",whatsapp:"https://wa.me/6041234567"},
-    videos:[
-      {label:"Heritage Suite Tour · 4:10",thumb:"linear-gradient(135deg,#3d2200,#7a4400)"},
-      {label:"Seafront Esplanade · 2:05",thumb:"linear-gradient(135deg,#4d3300,#8a6600)"},
-    ]
-  },
-  {
-    id:4,
-    name:"Alila Seminyak",
-    location:"Seminyak, Bali",
-    category:"boutique",
-    stars:5,
-    photos:61,
-    desc:"Minimalist Balinese architecture meets the raw power of the Indian Ocean. Alila Seminyak's cliff-edge infinity pool and open-air suites offer front-row seats to some of the world's most legendary sunsets.",
-    thumb:"linear-gradient(135deg,#2d1a00 0%,#6e3d00 35%,#d4742a 100%)",
-    gallery:[
-      "linear-gradient(135deg,#2d1a00,#6e3d00)",
-      "linear-gradient(135deg,#6e3d00,#aa6a00)",
-      "linear-gradient(135deg,#4d2a00,#8a5200)",
-      "linear-gradient(135deg,#3d2d00,#7a5a00)",
-      "linear-gradient(135deg,#1a1200,#4a3200)",
-    ],
-    booking:{booking:"https://booking.com",traveloka:"https://traveloka.com",agoda:"https://agoda.com",trip:"https://trip.com",airbnb:"https://airbnb.com"},
-    social:{instagram:"https://instagram.com",tiktok:"https://tiktok.com",facebook:"https://facebook.com",youtube:"https://youtube.com"},
-    videos:[
-      {label:"Cliff Suite Walkthrough · 3:20",thumb:"linear-gradient(135deg,#2d1a00,#6e3d00)"},
-      {label:"Sunset at Alila · 2:45",thumb:"linear-gradient(135deg,#4d2d00,#9a6a00)"},
-    ]
-  },
-  {
-    id:5,
-    name:"Gayana Eco Resort",
-    location:"Gaya Island, Sabah",
-    category:"resort",
-    stars:5,
-    photos:29,
-    desc:"Floating above the crystal waters of Gaya Island, Gayana's water chalets are surrounded by a living marine park. The world's only eco-resort-based restoration programme for giant clams lies right beneath your deck.",
-    thumb:"linear-gradient(135deg,#003d2d 0%,#006a52 45%,#00c896 100%)",
-    gallery:[
-      "linear-gradient(135deg,#003d2d,#006a52)",
-      "linear-gradient(135deg,#006a52,#009a7a)",
-      "linear-gradient(135deg,#004d3a,#008a6a)",
-      "linear-gradient(135deg,#002d20,#005a40)",
-      "linear-gradient(135deg,#005a44,#00aa82)",
-    ],
-    booking:{booking:"https://booking.com",agoda:"https://agoda.com"},
-    social:{instagram:"https://instagram.com",facebook:"https://facebook.com",whatsapp:"https://wa.me/6088123456"},
-    videos:[
-      {label:"Eco Chalet Tour · 2:55",thumb:"linear-gradient(135deg,#003d2d,#006a52)"},
-      {label:"Diving & Marine Life · 3:40",thumb:"linear-gradient(135deg,#004d3a,#009a7a)"},
-    ]
-  },
-  {
-    id:6,
-    name:"Marina Bay Sands",
-    location:"Marina Bay, Singapore",
-    category:"city",
-    stars:5,
-    photos:88,
-    desc:"An architectural marvel that redefined a city's skyline. The iconic SkyPark atop three towers houses the world's most famous infinity pool, with an unobstructed panorama of the entire Singapore skyline.",
-    thumb:"linear-gradient(135deg,#001a3d 0%,#003d7a 45%,#0a7ac8 100%)",
-    gallery:[
-      "linear-gradient(135deg,#001a3d,#003d7a)",
-      "linear-gradient(135deg,#003d7a,#006aaa)",
-      "linear-gradient(135deg,#001d4d,#004d8a)",
-      "linear-gradient(135deg,#000d2a,#002a5a)",
-      "linear-gradient(135deg,#003060,#0060aa)",
-    ],
-    booking:{booking:"https://booking.com",traveloka:"https://traveloka.com",agoda:"https://agoda.com",expedia:"https://expedia.com",trip:"https://trip.com"},
-    social:{instagram:"https://instagram.com",tiktok:"https://tiktok.com",facebook:"https://facebook.com",youtube:"https://youtube.com",whatsapp:"https://wa.me/6565551234"},
-    videos:[
-      {label:"SkyPark Infinity Pool · 4:00",thumb:"linear-gradient(135deg,#001a3d,#003d7a)"},
-      {label:"Property Highlights · 5:10",thumb:"linear-gradient(135deg,#003d7a,#006aaa)"},
-    ]
-  },
-  {
-    id:7,
-    name:"Tanjong Jara Resort",
-    location:"Dungun, Terengganu",
-    category:"heritage",
-    stars:5,
-    photos:33,
-    desc:"Recipient of numerous world's best awards, Tanjong Jara brings 17th-century Malay palace architecture to a pristine East Coast beach. Its spa, Ibu Bumi, is one of Southeast Asia's most acclaimed wellness destinations.",
-    thumb:"linear-gradient(135deg,#1a0d00 0%,#4d2d00 45%,#aa7a2a 100%)",
-    gallery:[
-      "linear-gradient(135deg,#1a0d00,#4d2d00)",
-      "linear-gradient(135deg,#4d2d00,#7a5200)",
-      "linear-gradient(135deg,#2d1a00,#6a4200)",
-      "linear-gradient(135deg,#3d2200,#7a4d00)",
-      "linear-gradient(135deg,#0d0a00,#3a2500)",
-    ],
-    booking:{booking:"https://booking.com",traveloka:"https://traveloka.com",expedia:"https://expedia.com"},
-    social:{instagram:"https://instagram.com",facebook:"https://facebook.com"},
-    videos:[
-      {label:"East Coast Getaway · 3:15",thumb:"linear-gradient(135deg,#1a0d00,#4d2d00)"},
-      {label:"Ibu Bumi Spa · 2:30",thumb:"linear-gradient(135deg,#2d1a00,#6a4200)"},
-    ]
-  },
-  {
-    id:8,
-    name:"Ritz-Carlton Langkawi",
-    location:"Pantai Kok, Langkawi",
-    category:"resort",
-    stars:5,
-    photos:74,
-    desc:"Nestled in a protected UNESCO-listed rainforest, Ritz-Carlton Langkawi's villas and overwater bungalows hover above an ancient jungle canopy that opens to a pristine turquoise bay.",
-    thumb:"linear-gradient(135deg,#0d2d00 0%,#1e5a00 45%,#3aaa2a 100%)",
-    gallery:[
-      "linear-gradient(135deg,#0d2d00,#1e5a00)",
-      "linear-gradient(135deg,#1e5a00,#2a8a00)",
-      "linear-gradient(135deg,#1a3d00,#2a6a00)",
-      "linear-gradient(135deg,#0a2000,#1a4a00)",
-      "linear-gradient(135deg,#2a4d00,#3a7a00)",
-    ],
-    booking:{booking:"https://booking.com",agoda:"https://agoda.com",expedia:"https://expedia.com",trip:"https://trip.com"},
-    social:{instagram:"https://instagram.com",tiktok:"https://tiktok.com",facebook:"https://facebook.com",youtube:"https://youtube.com",whatsapp:"https://wa.me/60412345678"},
-    videos:[
-      {label:"Rainforest Villa · 3:55",thumb:"linear-gradient(135deg,#0d2d00,#1e5a00)"},
-      {label:"Overwater Bungalow · 2:20",thumb:"linear-gradient(135deg,#1a3d00,#2a6a00)"},
-    ]
-  },
-  {
-    id:9,
-    name:"Berjaya Tioman Resort",
-    location:"Tioman Island, Pahang",
-    category:"resort",
-    stars:4,
-    photos:27,
-    desc:"Tioman's original luxury address — a collection of chalets and villas scattered along a horseshoe bay fringed with jungle. Dive sites rated among Asia's top ten are steps from your front door.",
-    thumb:"linear-gradient(135deg,#003340 0%,#006680 45%,#00bcd4 100%)",
-    gallery:[
-      "linear-gradient(135deg,#003340,#006680)",
-      "linear-gradient(135deg,#006680,#009ab0)",
-      "linear-gradient(135deg,#004450,#008090)",
-      "linear-gradient(135deg,#002233,#005566)",
-      "linear-gradient(135deg,#005060,#009090)",
-    ],
-    booking:{booking:"https://booking.com",traveloka:"https://traveloka.com",agoda:"https://agoda.com"},
-    social:{instagram:"https://instagram.com",facebook:"https://facebook.com",whatsapp:"https://wa.me/609123456"},
-    videos:[
-      {label:"Island Chalet Tour · 2:40",thumb:"linear-gradient(135deg,#003340,#006680)"},
-      {label:"Snorkelling Guide · 3:05",thumb:"linear-gradient(135deg,#004450,#008090)"},
-    ]
-  },
-  {
-    id:10,
-    name:"Shangri-La Rasa Ria",
-    location:"Pantai Dalit, Sabah",
-    category:"resort",
-    stars:5,
-    photos:58,
-    desc:"Home to an on-site orangutan care and conservation programme, Rasa Ria fuses world-class resort luxury with genuine wildlife conservation across 64 acres of protected nature reserve.",
-    thumb:"linear-gradient(135deg,#1a2d00 0%,#3a5a00 45%,#8aaa2a 100%)",
-    gallery:[
-      "linear-gradient(135deg,#1a2d00,#3a5a00)",
-      "linear-gradient(135deg,#3a5a00,#5a8a00)",
-      "linear-gradient(135deg,#2a3d00,#4a6a00)",
-      "linear-gradient(135deg,#0d1a00,#2a3a00)",
-      "linear-gradient(135deg,#3a5000,#6a8000)",
-    ],
-    booking:{booking:"https://booking.com",traveloka:"https://traveloka.com",agoda:"https://agoda.com",expedia:"https://expedia.com",trip:"https://trip.com",airbnb:"https://airbnb.com"},
-    social:{instagram:"https://instagram.com",tiktok:"https://tiktok.com",facebook:"https://facebook.com",youtube:"https://youtube.com"},
-    videos:[
-      {label:"Orangutan Sanctuary · 4:30",thumb:"linear-gradient(135deg,#1a2d00,#3a5a00)"},
-      {label:"Beach Resort Tour · 3:10",thumb:"linear-gradient(135deg,#2a3d00,#4a6a00)"},
-    ]
-  },
-  {
-    id:11,
-    name:"Capella Singapore",
-    location:"Sentosa Island, Singapore",
-    category:"boutique",
-    stars:5,
-    photos:66,
-    desc:"Occupying a lush Sentosa hillside with views of the South China Sea, Capella Singapore — designed by Sir Norman Foster — houses just 112 rooms and villas, ensuring every guest receives butler service and complete privacy.",
-    thumb:"linear-gradient(135deg,#1a0020 0%,#3d0055 45%,#9a00cc 100%)",
-    gallery:[
-      "linear-gradient(135deg,#1a0020,#3d0055)",
-      "linear-gradient(135deg,#3d0055,#6a0088)",
-      "linear-gradient(135deg,#2a0033,#5a0077)",
-      "linear-gradient(135deg,#0d0015,#2a0040)",
-      "linear-gradient(135deg,#330044,#660099)",
-    ],
-    booking:{booking:"https://booking.com",agoda:"https://agoda.com",expedia:"https://expedia.com",trip:"https://trip.com"},
-    social:{instagram:"https://instagram.com",facebook:"https://facebook.com",youtube:"https://youtube.com"},
-    videos:[
-      {label:"Colonial Villa · 3:00",thumb:"linear-gradient(135deg,#1a0020,#3d0055)"},
-      {label:"Auriga Spa · 2:25",thumb:"linear-gradient(135deg,#2a0033,#5a0077)"},
-    ]
-  },
-  {
-    id:12,
-    name:"The Datai Langkawi",
-    location:"Datai Bay, Langkawi",
-    category:"villa",
-    stars:5,
-    photos:49,
-    desc:"Hidden within a 10-million-year-old rainforest on Langkawi's northwest shore, The Datai sits above the pristine Datai Bay. Its jungle villas — connected by elevated walkways — are home to dusky leaf monkeys and rare hornbills.",
-    thumb:"linear-gradient(135deg,#001a10 0%,#003d28 45%,#00aa7a 100%)",
-    gallery:[
-      "linear-gradient(135deg,#001a10,#003d28)",
-      "linear-gradient(135deg,#003d28,#006a4a)",
-      "linear-gradient(135deg,#002a1a,#005a3a)",
-      "linear-gradient(135deg,#001408,#003020)",
-      "linear-gradient(135deg,#003a2a,#007055)",
-    ],
-    booking:{booking:"https://booking.com",traveloka:"https://traveloka.com",agoda:"https://agoda.com",expedia:"https://expedia.com"},
-    social:{instagram:"https://instagram.com",tiktok:"https://tiktok.com",facebook:"https://facebook.com",youtube:"https://youtube.com",whatsapp:"https://wa.me/604123456"},
-    videos:[
-      {label:"Rainforest Arrival · 3:45",thumb:"linear-gradient(135deg,#001a10,#003d28)"},
-      {label:"Tree Villa Tour · 2:50",thumb:"linear-gradient(135deg,#002a1a,#005a3a)"},
-    ]
-  },
-];
-
-const platformNames = {
-  booking:"Booking.com", traveloka:"Traveloka", agoda:"Agoda",
-  expedia:"Expedia", trip:"Trip.com", airbnb:"Airbnb"
-};
-const platformIcons = {
-  booking:"🌐", traveloka:"✈️", agoda:"🗝️",
-  expedia:"💼", trip:"🌏", airbnb:"🏡"
-};
-const socialNames = {
-  instagram:"Instagram", tiktok:"TikTok", facebook:"Facebook",
-  youtube:"YouTube", whatsapp:"WhatsApp"
-};
-const socialIcons = {
-  instagram:"📸", tiktok:"🎵", facebook:"📘",
-  youtube:"▶️", whatsapp:"💬"
-};
-const stars = n => "★".repeat(n) + "☆".repeat(5-n);
-
-// ── RENDER CARD ──
-function renderCard(h){
-  const bookingKeys = Object.keys(h.booking);
-  const tags = bookingKeys.slice(0,4).map(k =>
-    `<span class="ptag ${k}">${platformIcons[k]} ${platformNames[k]}</span>`
-  ).join('');
-  return `
-    <div class="hotel-card" data-id="${h.id}">
-      <div class="card-thumb">
-        <div class="thumb-img" style="background:${h.thumb}"></div>
-        <div class="thumb-overlay"></div>
-        <div class="star-badge">${h.stars}★</div>
-        <div class="photo-count">📷 ${h.photos}</div>
-        <div class="platform-tags">${tags}</div>
-      </div>
-      <div class="card-body">
-        <div class="card-location">📍 ${h.location}</div>
-        <div class="card-name">${h.name}</div>
-        <div class="card-desc">${h.desc}</div>
-        <div class="card-meta">
-          <div class="card-social">
-            ${Object.keys(h.social).slice(0,4).map(s=>`<div class="social-icon-sm">${socialIcons[s]}</div>`).join('')}
+    <style>
+      /* Custom fine-tuning for absolute layouts */
+      .modal-scroll::-webkit-scrollbar {
+        width: 6px;
+      }
+      .modal-scroll::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .modal-scroll::-webkit-scrollbar-thumb {
+        background-color: #e5e5e0;
+        border-radius: 10px;
+      }
+      .modal-scroll::-webkit-scrollbar-thumb:hover {
+        background-color: #cccbbf;
+      }
+    </style>
+  </head>
+  <body class="bg-stone-50 text-stone-800 antialiased selection:bg-amber-100 selection:text-amber-900 min-h-screen flex flex-col">
+    
+    <!-- ── TOP GLOBAL HEADER ── -->
+    <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-xl border-b border-stone-200/60 px-4 sm:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center justify-between w-full md:w-auto">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-white font-extrabold text-sm tracking-wider shadow-sm shadow-amber-500/20">
+            SC
           </div>
-          <div class="card-cta">View Hotel →</div>
+          <div>
+            <h1 class="text-xl font-extrabold tracking-tight text-stone-900 flex items-center leading-none">
+              Stay<span class="text-amber-600 font-medium">Connect</span>
+            </h1>
+            <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold mt-0.5">by Lucky Agency</p>
+          </div>
+        </div>
+        <span class="md:hidden text-xs bg-amber-50 px-2.5 py-1 rounded-full text-amber-700 font-semibold border border-amber-200/50">
+          Light Haven
+        </span>
+      </div>
+
+      <!-- Search Box with automatic search trigger -->
+      <div class="relative w-full md:max-w-md">
+        <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-stone-450 text-stone-400"></i>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search hotels, private bays, amenities, or towns..."
+          class="w-full pl-10 pr-10 py-2.5 text-sm bg-stone-100/75 hover:bg-stone-100 focus:bg-white rounded-xl border border-transparent focus:border-stone-300 outline-none transition-all placeholder:text-stone-400 text-stone-900"
+        />
+        <button 
+          id="search-clear-btn" 
+          class="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 p-0.5 rounded-full hidden"
+        >
+          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <div class="hidden lg:flex items-center gap-4">
+        <div class="text-right">
+          <p class="text-xs text-stone-500 font-medium">Curated Local Stays</p>
+          <p class="text-[11px] text-stone-400 tracking-wider uppercase font-bold">Malaysia & Southeast Asia</p>
+        </div>
+        <span class="h-6 w-px bg-stone-200"></span>
+        <div class="flex items-center gap-2 pr-1">
         </div>
       </div>
-    </div>`;
-}
+    </header>
 
-// ── RENDER MODAL ──
-function renderModal(h){
-  const galleryHTML = h.gallery.map(g =>
-    `<div class="gallery-strip-item"><div class="gallery-strip-img" style="background:${g}"></div></div>`
-  ).join('');
-
-  const bookingHTML = Object.entries(h.booking).map(([k,url])=>
-    `<a href="${url}" target="_blank" rel="noopener" class="booking-btn">
-      <span class="b-icon">${platformIcons[k]}</span>
-      <span class="b-name">${platformNames[k]}</span>
-      <span class="b-arrow">↗</span>
-    </a>`
-  ).join('');
-
-  const socialHTML = Object.entries(h.social).map(([k,url])=>
-    `<a href="${url}" target="_blank" rel="noopener" class="social-btn">
-      <span class="s-icon">${socialIcons[k]}</span>${socialNames[k]}
-    </a>`
-  ).join('');
-
-  const videoHTML = h.videos.map(v=>
-    `<div class="video-thumb-card">
-      <div class="video-thumb-img" style="background:${v.thumb}"></div>
-      <div class="video-play-overlay"><div class="play-circle">▶</div></div>
-      <div class="video-label">${v.label}</div>
-    </div>`
-  ).join('');
-
-  return `
-    <div class="modal-hero">
-      <div class="modal-hero-img" style="background:${h.thumb}"></div>
-      <div class="modal-hero-overlay"></div>
-      <div class="modal-hero-content">
-        <div class="modal-location">📍 ${h.location}</div>
-        <div class="modal-name">${h.name}</div>
-        <div class="modal-stars">${stars(h.stars)}</div>
-      </div>
+    <!-- ── BROADCAST ANNOUNCEMENT BAR ── -->
+    <div class="bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 text-white text-[12px] sm:text-xs font-medium text-center py-2 px-4 shadow-inner">
+      ✨ <strong class="font-semibold">Discover Pristine Havens:</strong> Filter through 12 hand-picked Southeast Asian luxury sanctuaries featuring pristine high-resolution photography.
     </div>
-    <div class="modal-body">
-      <div class="gallery-strip">${galleryHTML}</div>
-      <div class="modal-section-title">About This Hotel</div>
-      <p class="modal-desc">${h.desc}</p>
-      <div class="modal-section-title">Book Your Stay</div>
-      <div class="booking-platforms">${bookingHTML}</div>
-      <div class="modal-section-title">Videos</div>
-      <div class="video-grid">${videoHTML}</div>
-      <div class="modal-section-title">Follow &amp; Connect</div>
-      <div class="social-row">${socialHTML}</div>
-    </div>`;
-}
 
-// ── STATE & RENDER ──
-let activeCategory = 'all';
-let activePlatform = null;
-let searchQuery = '';
+    <!-- ── CORE DIRECTORY CONTAINER ── -->
+    <div class="max-w-[1440px] w-full mx-auto px-4 md:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start flex-1">
+      
+      <!-- ── LEFT SIDEBAR FILTERS (Col Span 3) ── -->
+      <aside class="col-span-1 lg:col-span-3 space-y-6">
+        
+        <!-- Active Preferences Status & Reset Trigger -->
+        <div class="bg-white p-5 rounded-2xl border border-stone-200/60 shadow-xs">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-bold uppercase tracking-wider text-stone-400">Your Preferences</h3>
+            <button 
+              id="reset-all-btn"
+              class="text-xs text-stone-550 hover:text-amber-700 transition-colors flex items-center gap-1.5 font-semibold cursor-pointer"
+            >
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset All
+            </button>
+          </div>
+          
+          <div id="pref-pills-container" class="flex flex-wrap gap-2 text-stone-650">
+            <!-- Programmatic dynamic preference tags injection -->
+          </div>
+        </div>
 
-function getFiltered(){
-  return hotels.filter(h=>{
-    const catOk = activeCategory === 'all' || h.category === activeCategory;
-    const platOk = !activePlatform || h.booking[activePlatform];
-    const searchOk = !searchQuery ||
-      h.name.toLowerCase().includes(searchQuery) ||
-      h.location.toLowerCase().includes(searchQuery);
-    return catOk && platOk && searchOk;
-  });
-}
+        <!-- Hotel Category Selectors -->
+        <div class="bg-white p-5 rounded-2xl border border-stone-200/60 shadow-xs space-y-3">
+          <h4 class="text-xs uppercase tracking-widest text-stone-400 font-extrabold">Filter by Category</h4>
+          <div class="space-y-1" id="category-filter-list">
+            <!-- Category buttons injected programmatically -->
+          </div>
+        </div>
 
-function renderGrid(){
-  const filtered = getFiltered();
-  const grid = document.getElementById('hotel-grid');
-  document.getElementById('feed-count').textContent = `${filtered.length} ${filtered.length===1?'property':'properties'} found`;
-  grid.innerHTML = filtered.map(renderCard).join('');
-  grid.querySelectorAll('.hotel-card').forEach(card=>{
-    card.addEventListener('click',()=>{
-      const hotel = hotels.find(h=>h.id===+card.dataset.id);
-      openModal(hotel);
-    });
-  });
-}
+        <!-- State / Region Destination Filter pills -->
+        <div class="bg-white p-5 rounded-2xl border border-stone-200/60 shadow-xs space-y-3">
+          <h4 class="text-xs uppercase tracking-widest text-stone-400 font-extrabold">Select Region</h4>
+          <div class="flex flex-wrap gap-2" id="region-filter-list">
+            <!-- Region buttons injected programmatically -->
+          </div>
+        </div>
 
-// ── MODAL ──
-const backdrop = document.getElementById('modal-backdrop');
-const modalContent = document.getElementById('modal-content');
+        <!-- Booking Channels Filter Checkboxes -->
+        <div class="bg-white p-5 rounded-2xl border border-stone-200/60 shadow-xs space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs uppercase tracking-widest text-stone-400 font-extrabold">Booking Channels</h4>
+            <button id="clear-platform-btn" class="text-[10px] text-stone-400 hover:text-stone-600 font-bold uppercase tracking-wider hidden">
+              Clear
+            </button>
+          </div>
+          <p class="text-[11px] text-stone-400 leading-relaxed -mt-1.5 font-medium">Show only properties available on your favorite platform:</p>
+          <div class="grid grid-cols-2 gap-2" id="platform-filter-grid">
+            <!-- Platform buttons injected programmatically -->
+          </div>
+        </div>
 
-function openModal(hotel){
-  modalContent.innerHTML = renderModal(hotel);
-  backdrop.classList.add('open');
-  document.body.style.overflow = 'hidden';
-  backdrop.scrollTop = 0;
-}
+        <!-- Premium Experiences Checklist -->
+        <div class="bg-white p-5 rounded-2xl border border-stone-200/60 shadow-xs space-y-3">
+          <h4 class="text-xs uppercase tracking-widest text-stone-400 font-extrabold">Premium Amenities</h4>
+          <div class="flex flex-col gap-2" id="amenity-checkbox-list">
+            <!-- Amenity checkboxes injected programmatically -->
+          </div>
+        </div>
+      </aside>
 
-function closeModal(){
-  backdrop.classList.remove('open');
-  document.body.style.overflow = '';
-}
+      <!-- ── RIGHT SIDE MAIN DIRECTORY CATALOGUE (Col Span 9) ── -->
+      <main class="col-span-1 lg:col-span-9 space-y-6">
+        
+        <!-- Header status results and Sorting selector -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white px-5 py-4 rounded-2xl border border-stone-200/60 shadow-xs">
+          <div>
+            <p class="text-xs uppercase tracking-widest text-stone-400 font-bold">StayConnect Collection</p>
+            <h2 id="catalogue-headline" class="text-lg font-extrabold text-stone-900 mt-0.5">
+              12 Luxury Stays Found
+            </h2>
+          </div>
 
-document.getElementById('modal-close').addEventListener('click', closeModal);
-backdrop.addEventListener('click', e=>{ if(e.target===backdrop) closeModal(); });
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+          <div class="flex items-center gap-3">
+            <span class="text-xs text-stone-400 font-bold uppercase tracking-wider whitespace-nowrap">Sort By</span>
+            <select
+              id="sort-select"
+              class="text-xs bg-stone-100 hover:bg-stone-200 border-none rounded-lg px-3 py-2 text-stone-700 outline-none font-semibold cursor-pointer transition-colors"
+            >
+              <option value="featured">Featured Collection</option>
+              <option value="lowest">Price: Low to High</option>
+              <option value="highest">Price: High to Low</option>
+              <option value="rating">Rating Score (High-Low)</option>
+              <option value="alphabetical">A — Z Alphabetical</option>
+            </select>
+          </div>
+        </div>
 
-// ── FILTERS ──
-document.querySelectorAll('.filter-chip[data-filter]').forEach(chip=>{
-  chip.addEventListener('click',()=>{
-    document.querySelectorAll('.filter-chip[data-filter]').forEach(c=>c.classList.remove('active'));
-    chip.classList.add('active');
-    activeCategory = chip.dataset.filter;
-    renderGrid();
-  });
-});
+        <!-- Dynamic Fallback State -->
+        <div id="empty-state-card" class="bg-white rounded-3xl p-12 text-center border border-stone-200/60 max-w-xl mx-auto my-12 shadow-xs space-y-4 hidden animate-none">
+          <div class="w-16 h-16 rounded-full bg-amber-50 flex items-center justify-center mx-auto">
+            <i data-lucide="sliders-horizontal" class="w-8 h-8 text-amber-600"></i>
+          </div>
+          <h3 class="text-lg font-bold text-stone-900">No properties match your filters</h3>
+          <p class="text-stone-500 text-sm leading-relaxed max-w-sm mx-auto">
+            Try loosening your category parameters, resetting location states, or clearing the search query to rediscover luxury sanctuaries.
+          </p>
+          <button
+            id="empty-clear-filters-btn"
+            class="px-5 py-2.5 bg-stone-900 text-white rounded-xl text-xs font-semibold tracking-wider hover:bg-stone-800 transition-colors"
+          >
+            Clear All Search Filters
+          </button>
+        </div>
 
-document.querySelectorAll('.platform-filter').forEach(pf=>{
-  pf.addEventListener('click',()=>{
-    if(pf.classList.contains('active')){
-      pf.classList.remove('active');
-      activePlatform = null;
-    } else {
-      document.querySelectorAll('.platform-filter').forEach(p=>p.classList.remove('active'));
-      pf.classList.add('active');
-      activePlatform = pf.dataset.platform;
-    }
-    renderGrid();
-  });
-});
+        <!-- Programmatic catalog grid -->
+        <div id="hotels-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Dynamic hotel cards injected programmatically -->
+        </div>
 
-document.querySelectorAll('.sort-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-  });
-});
+        <!-- Architectural Spotlight Section -->
+        <section class="bg-stone-900 text-white rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl relative overflow-hidden">
+          <div class="absolute -top-12 -right-12 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl"></div>
+          <div class="absolute -bottom-16 -left-16 w-64 h-64 bg-amber-600/10 rounded-full blur-3xl"></div>
+          
+          <div class="space-y-2.5 max-w-xl relative z-10">
+            <span class="text-[10px] uppercase tracking-widest font-extrabold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-sm inline-block">
+              True Architectural Mastery
+            </span>
+            <h3 class="text-xl sm:text-2xl font-serif text-white leading-tight font-bold">
+              Seeking deeper aesthetic immersion?
+            </h3>
+            <p class="text-stone-400 text-xs sm:text-sm leading-relaxed">
+              Filter by <strong>Heritage Mansions</strong> to experience classical 19th-century colonial structures in Penang or Terengganu, restored meticulously with organic timber framing and private seafront sunset paths.
+            </p>
+          </div>
 
-// ── SEARCH ──
-document.getElementById('search-input').addEventListener('input', e=>{
-  searchQuery = e.target.value.toLowerCase().trim();
-  renderGrid();
-});
+          <div class="flex flex-row md:flex-col gap-3 w-full md:w-auto shrink-0 relative z-10">
+            <button 
+              id="spotlight-heritage-btn"
+              class="flex-1 bg-amber-600 hover:bg-amber-550 text-stone-950 font-bold text-xs uppercase tracking-wider py-3 px-5 rounded-xl transition-all shadow-lg text-center cursor-pointer"
+            >
+              Browse Heritage
+            </button>
+            <button 
+              id="spotlight-villa-btn"
+              class="flex-1 bg-white/10 hover:bg-white/15 text-white font-semibold text-xs py-3 px-5 rounded-xl transition-all text-center cursor-pointer border border-white/10"
+            >
+              Explore Villas
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
 
-// ── INIT ──
-renderGrid();
-</script>
-</body>
+    <!-- ── INTERACTIVE DETAILED OVERLAY MODAL ── -->
+    <div id="detail-modal-backdrop" class="fixed inset-0 z-50 overflow-y-auto hidden items-start justify-center p-4 sm:p-6 md:p-10 transition-all duration-200">
+      
+      <!-- Backdrop Blur scrim -->
+      <div id="modal-scrim-bg" class="fixed inset-0 bg-stone-900/60 backdrop-blur-md cursor-zoom-out"></div>
+
+      <!-- Modal Card Core -->
+      <div class="bg-white rounded-3xl overflow-hidden shadow-2xl relative w-full max-w-4xl z-10 border border-stone-200 mt-4 outline-none transform transition-all duration-300">
+        
+        <!-- Interactive Close handle -->
+        <button
+          id="modal-close-btn"
+          class="absolute top-4 right-4 z-50 w-9 h-9 rounded-full bg-stone-900/80 backdrop-blur text-white flex items-center justify-center hover:bg-stone-900 transition-all hover:scale-105"
+        >
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <!-- Large cover thumbnail overlay container -->
+        <div class="relative h-[280px] sm:h-[360px] bg-stone-100">
+          <img
+            id="modal-cover-img"
+            src=""
+            alt=""
+            referrerPolicy="no-referrer"
+            class="w-full h-full object-cover"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-900/90 via-stone-900/20 to-transparent"></div>
+
+          <!-- Dynamic absolute captions -->
+          <div class="absolute bottom-6 left-6 right-6 text-white space-y-1">
+            <span id="modal-region-caption" class="text-amber-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 leading-none">
+              📍 LANGKAWI, MALAYSIA
+            </span>
+            <h2 id="modal-title-caption" class="text-2xl sm:text-3.5xl font-serif font-extrabold text-white leading-tight drop-shadow-xs">
+              Mansion Palace Haven
+            </h2>
+            <div class="flex flex-wrap items-center gap-3 text-xs text-stone-300">
+              <span id="modal-rating-badge" class="bg-white/10 px-2 py-0.5 rounded font-mono text-amber-300 font-bold">4.9 ★ Rating</span>
+              <span>•</span>
+              <span id="modal-stars-count">5 Star Level</span>
+              <span>•</span>
+              <span id="modal-price-tier" class="text-white font-semibold">Starting at $512 per night</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scrollable details structure -->
+        <div class="p-6 sm:p-8 space-y-6">
+          
+          <!-- Photo deck swapper slider -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <h4 class="text-[10px] uppercase tracking-widest text-stone-400 font-extrabold flex items-center gap-1.5">
+                <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i> Photo Deck Gallery (Interactive)
+              </h4>
+              <span class="text-[10px] text-stone-500 italic">Click photo to inspect structure</span>
+            </div>
+            <div class="grid grid-cols-5 gap-2.5" id="modal-gallery-strip">
+              <!-- Swappable thumb blocks injected programmatically -->
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Left Side Core Details (Col Span 7) -->
+            <div class="lg:col-span-7 space-y-6">
+              
+              <!-- Paragraph body description -->
+              <div class="space-y-2.5">
+                <h4 class="text-stone-900 font-bold text-sm uppercase tracking-wide border-b border-stone-100 pb-2">
+                  About This Haven
+                </h4>
+                <p id="modal-full-desc" class="text-stone-600 text-xs sm:text-sm leading-relaxed text-justify">
+                  Discover a beautiful luxury resort sanctuary.
+                </p>
+              </div>
+
+              <!-- Amenity Grid Details -->
+              <div class="space-y-3">
+                <h4 class="text-stone-900 font-bold text-sm uppercase tracking-wide border-b border-stone-100 pb-2">
+                  Included Experiences &amp; Amenities
+                </h4>
+                <div class="grid grid-cols-2 gap-2 text-xs text-stone-700" id="modal-amenity-grid">
+                  <!-- Custom checkboxes injected programmatically -->
+                </div>
+              </div>
+
+              <!-- Guest Video log player block -->
+              <div class="space-y-3">
+                <h4 class="text-stone-900 font-bold text-sm uppercase tracking-wide border-b border-stone-100 pb-2 flex items-center gap-1.5">
+                  <i data-lucide="video" class="w-4 h-4"></i> Guest Video Logs & Guided Tours
+                </h4>
+
+                <!-- Active video player simulated card -->
+                <div id="video-stream-container" class="relative aspect-16/9 bg-black rounded-2xl overflow-hidden border border-stone-200 shadow-lg hidden">
+                  <div class="absolute inset-0 flex flex-col items-center justify-center text-white space-y-3 text-center p-4">
+                    <div class="w-12 h-12 rounded-full border-3 border-amber-500 border-t-transparent animate-spin"></div>
+                    <p class="text-sm font-bold tracking-tight text-stone-200">Buffering guest audio-video stream...</p>
+                    <p id="video-stream-label" class="text-[11px] text-stone-400 max-w-xs truncate">Rainforest Arrival Log Tour</p>
+                    <button
+                      id="video-player-close-btn"
+                      class="px-4 py-1.5 bg-stone-800 hover:bg-stone-700 text-xs font-semibold rounded-lg text-white border border-stone-700 transition-colors cursor-pointer"
+                    >
+                      Close Player
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Video selectors grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="modal-videos-grid">
+                  <!-- Video blocks injected here -->
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Right Column Cost Calculator & Booking platform linkage (Col Span 5) -->
+            <div class="lg:col-span-5 space-y-6">
+              
+              <!-- Realtime cost budget estimator widget -->
+              <div class="bg-stone-50 border border-stone-200 p-5 rounded-2xl space-y-4">
+                <div class="text-stone-900 border-b border-stone-200/60 pb-3">
+                  <span class="text-[10px] bg-amber-100 text-amber-900 font-extrabold px-2.5 py-1 rounded inline-block">StayEstimator</span>
+                  <h4 class="text-xs font-extrabold text-stone-400 uppercase mt-2">Calculate Flight & Stay Rates</h4>
+                </div>
+
+                <div class="space-y-3 text-xs">
+                  <div class="grid grid-cols-2 gap-3">
+                    <label class="space-y-1 block">
+                      <span class="text-[10px] uppercase tracking-wider text-stone-400 font-bold block">Check In</span>
+                      <div class="relative">
+                        <i data-lucide="calendar" class="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"></i>
+                        <input
+                          type="date"
+                          id="calc-check-in"
+                          value="2026-06-15"
+                          class="w-full pl-8 pr-2 py-2 bg-white rounded-lg border border-stone-300 outline-none text-[11px] text-stone-800"
+                        />
+                      </div>
+                    </label>
+
+                    <label class="space-y-1 block">
+                      <span class="text-[10px] uppercase tracking-wider text-stone-400 font-bold block">Check Out</span>
+                      <div class="relative">
+                        <i data-lucide="calendar" class="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"></i>
+                        <input
+                          type="date"
+                          id="calc-check-out"
+                          value="2026-06-20"
+                          class="w-full pl-8 pr-2 py-2 bg-white rounded-lg border border-stone-300 outline-none text-[11px] text-stone-800"
+                        />
+                      </div>
+                    </label>
+                  </div>
+
+                  <label class="space-y-1 block">
+                    <span class="text-[10px] uppercase tracking-wider text-stone-400 font-bold block">Number of Guests</span>
+                    <div class="relative">
+                      <i data-lucide="users" class="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"></i>
+                      <select
+                        id="calc-guests"
+                        class="w-full pl-8 pr-2 py-2 bg-white rounded-lg border border-stone-300 outline-none text-xs text-stone-800 cursor-pointer"
+                      >
+                        <option value="1">1 Adult Guest</option>
+                        <option value="2" selected>2 Adult Guests</option>
+                        <option value="4">4 Guests (Private Suite)</option>
+                        <option value="6">6 Guests (Luxury Villa Block)</option>
+                      </select>
+                    </div>
+                  </label>
+
+                  <!-- Computed estimates sheet -->
+                  <div class="pt-3 border-t border-stone-200 space-y-2">
+                    <div class="flex justify-between items-center text-stone-500">
+                      <span>Base Rate (<span id="calc-computed-nights">5</span> nights)</span>
+                      <span id="calc-base-total" class="font-mono text-stone-800 font-semibold">$0 USD</span>
+                    </div>
+                    <div class="flex justify-between items-center text-stone-500">
+                      <span>Eco Heritage Levy (<span id="calc-computed-guests">2</span> guests)</span>
+                      <span id="calc-levy-total" class="font-mono text-stone-800 font-semibold">$0 USD</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center text-stone-900 font-bold text-sm pt-2 border-t border-dashed border-stone-200">
+                      <span>Total Stay Estimate</span>
+                      <span id="calc-ultimate-total" class="font-mono text-amber-800 text-semibold text-base">$0 USD</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dedicated external links grid -->
+              <div class="space-y-3">
+                <h4 class="text-xs uppercase tracking-widest text-stone-400 font-extrabold">Available Booking Options</h4>
+                <div class="flex flex-col gap-2" id="modal-booking-links-list">
+                  <!-- booking partner blocks injected programmatically -->
+                </div>
+              </div>
+
+              <!-- Community check in socials list -->
+              <div class="space-y-3">
+                <h4 class="text-xs uppercase tracking-widest text-stone-400 font-extrabold">Follow &amp; Inquire Room Details</h4>
+                <div class="flex flex-wrap gap-2" id="modal-socials-row">
+                  <!-- social media tags injected programmatically -->
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ── COMPREHENSIVE FOOTER ── -->
+    <footer class="max-w-4xl mx-auto w-full text-center mt-auto pt-12 pb-8 px-4">
+      <div class="text-stone-300 text-lg mb-4">✦ ✦ ✦</div>
+      <p class="text-xs text-stone-400 font-semibold tracking-wider uppercase">
+        StayConnect Collection
+      </p>
+      <p class="text-[11px] text-stone-400 mt-2 max-w-md mx-auto leading-relaxed">
+        Pristine coastal, city, and rainforest sanctuaries mapped carefully to elevate travel connectivity. Handcrafted in elegant, light-themed typography.
+      </p>
+    </footer>
+
+    <!-- ── INTERACTIVE APPLICATION JAVASCRIPT STATE ENGINE ── -->
+    <script>
+      // ── DATA SCHEMA ──
+      const hotelsData = [
+        {
+          id: 1,
+          name: "The Pearl Langkawi",
+          location: "Langkawi, Kedah",
+          category: "resort",
+          stars: 5,
+          rating: 4.9,
+          photosCount: 38,
+          desc: "Perched majestically above the shimmering turquoise of the Andaman Sea, The Pearl Langkawi is a legendary sanctuary of pristine overwater villas and blooming coral gardens. Wake up to the gentle cresting of waves beneath your private deck, plunge into warm reef waters, and enjoy spectacular custom butler service in an environment of absolute paradise.",
+          image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80",
+          gallery: [
+            "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=600&q=80"
+          ],
+          bookingLinks: {
+            booking: "https://booking.com",
+            traveloka: "https://traveloka.com",
+            agoda: "https://agoda.com",
+            expedia: "https://expedia.com"
+          },
+          socialLinks: {
+            instagram: "https://instagram.com",
+            tiktok: "https://tiktok.com",
+            facebook: "https://facebook.com",
+            whatsapp: "https://wa.me/60123456789"
+          },
+          videos: [
+            { label: "Resort Walkthrough & Ocean Bungalow Overview", image: "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=300&q=85" },
+            { label: "Coral Reef Snorkeling & Dining Experience Scene", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=300&q=85" }
+          ],
+          priceRange: "$$$$",
+          startingPrice: 420,
+          amenities: ["Ocean View", "Private Beach", "Overwater Villa", "Infinity Pool", "24/7 Butler Service", "Full Spa"]
+        },
+        {
+          id: 2,
+          name: "Kuala Lumpur Grand Tower & Suites",
+          location: "KLCC, Kuala Lumpur",
+          category: "city",
+          stars: 5,
+          rating: 4.8,
+          photosCount: 52,
+          desc: "Soaring 52 stories above the city's iconic skyline, the Kuala Lumpur Grand presents cosmopolitan luxury elevated by breathtaking panoramic views. Featuring Malaysia's most celebrated rooftop sky-pool, modern tech-enabled residences, and award-winning dining curated by internationally acclaimed chefs right at the nerve center of the capital.",
+          image: "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80",
+          gallery: [
+            "https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=600&q=80"
+          ],
+          bookingLinks: {
+            booking: "https://booking.com",
+            traveloka: "https://traveloka.com",
+            trip: "https://trip.com"
+          },
+          socialLinks: {
+            instagram: "https://instagram.com",
+            facebook: "https://facebook.com",
+            youtube: "https://youtube.com"
+          },
+          videos: [
+            { label: "Penthouse Suite Tour with Tower Elevation Views", image: "https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?auto=format&fit=crop&w=300&q=85" },
+            { label: "Michelin Guide Dining & Rooftop Skybar Vibe", image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=300&q=85" }
+          ],
+          priceRange: "$$$",
+          startingPrice: 280,
+          amenities: ["Rooftop Pool", "City View", "Sky Nightclub", "Spa", "All-Glass Gym", "Metro Link"]
+        },
+        {
+          id: 3,
+          name: "Eastern & Oriental Colonial Mansion",
+          location: "George Town, Penang",
+          category: "heritage",
+          stars: 5,
+          rating: 4.9,
+          photosCount: 44,
+          desc: "An emblem of golden-era luxury since 1885, the grand Eastern & Oriental stands as Penang's most venerable legacy address. Immerse yourself in exquisite English manor butler service, walk along a sweeping maritime esplanade, and take afternoon high tea in high-ceilinged galleries where history's giants have slept.",
+          image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
+          gallery: [
+            "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80"
+          ],
+          bookingLinks: {
+            booking: "https://booking.com",
+            agoda: "https://agoda.com",
+            expedia: "https://expedia.com"
+          },
+          socialLinks: {
+            instagram: "https://instagram.com",
+            facebook: "https://facebook.com",
+            whatsapp: "https://wa.me/6041234567"
+          },
+          videos: [
+            { label: "1880 Garden Wing Heritage Suites Presentation", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=300&q=85" },
+            { label: "Maritime High Tea & Seafaring Garden Lounge", image: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=300&q=85" }
+          ],
+          priceRange: "$$$",
+          startingPrice: 240,
+          amenities: ["Colonial Decor", "Ocean Esplanade", "Afternoon Tea", "Classical Library", "Personal Butler"]
+        },
+        {
+          id: 4,
+          name: "Alila Beachfront Retreat",
+          location: "Seminyak, Bali",
+          category: "boutique",
+          stars: 5,
+          rating: 4.7,
+          photosCount: 61,
+          desc: "Clean-lined minimalist architecture frames the wild majesty of the Indian Ocean here on Bali's premier coastline. Alila Seminyak combines eco-responsible design with stunning cliff-edge pools, open-concept beach pavilions, and a relaxed luxury lifestyle to deliver unforgettable tropical sunsets.",
+          image: "https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=1200&q=80",
+          gallery: [
+            "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1527853787696-f7be74f2e39a?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=600&q=80"
+          ],
+          bookingLinks: {
+            booking: "https://booking.com",
+            traveloka: "https://traveloka.com",
+            agoda: "https://agoda.com",
+            trip: "https://trip.com",
+            airbnb: "https://airbnb.com"
+          },
+          socialLinks: {
+            instagram: "https://instagram.com",
+            tiktok: "https://tiktok.com",
+            facebook: "https://facebook.com",
+            youtube: "https://youtube.com"
+          },
+          videos: [
+            { label: "Cliff-edge Poolside Sunsets Experience", image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=300&q=85" },
+            { label: "Boutique Ocean Suite In-Depth Walkthrough", image: "https://images.unsplash.com/photo-1527853787696-f7be74f2e39a?auto=format&fit=crop&w=300&q=85" }
+          ],
+          priceRange: "$$$$",
+          startingPrice: 390,
+          amenities: ["Oceanfront View", "Cliffside Pool", "Organic Restaurant", "Yoga Pavilion", "Eco Friendly"]
+        },
+        {
+          id: 5,
+          name: "Gayana Eco Rainforest Resort",
+          location: "Gaya Island, Sabah",
+          category: "resort",
+          stars: 5,
+          rating: 4.8,
+          photosCount: 29,
+          desc: "Cradled carefully over the warm, coral-rich waves of Gaya Island, Gayana's tropical wooden villas reside directly in a protected marine sanctuary. Sleep in hand-built luxury over the ocean reef and explore the island's celebrated giant clam restoration center sitting right below your stepping paths.",
+          image: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?auto=format&fit=crop&w=1200&q=80",
+          gallery: [
+            "https://images.unsplash.com/photo-1546026423-cc4642628d2b?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=600&q=80"
+          ],
+          bookingLinks: {
+            booking: "https://booking.com",
+            agoda: "https://agoda.com"
+          },
+          socialLinks: {
+            instagram: "https://instagram.com",
+            facebook: "https://facebook.com",
+            whatsapp: "https://wa.me/6088123456"
+          },
+          videos: [
+            { label: "Eco-chalet Lagoon Arrival & Reef Snorkeling", image: "https://images.unsplash.com/photo-1546026423-cc4642628d2b?auto=format&fit=crop&w=300&q=85" },
+            { label: "Giant Clam Conservation & Eco Research Labs", image: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=300&q=85" }
+          ],
+          priceRange: "$$$",
+          startingPrice: 310,
+          amenities: ["Water Villas", "Reef Diving", "Clam Sanctuary", "Jungle Trails", "Kayaking", "Spa"]
+        },
+        {
+          id: 6,
+          name: "Marina Bay Landmark Suites",
+          location: "Marina Bay, Singapore",
+          category: "city",
+          stars: 5,
+          rating: 4.9,
+          photosCount: 88,
+          desc: "An architectural wonder that completely redefined Singapore's design landscape. High above the bustling bay, the sweeping SkyPark deck holds the planet's largest elevated infinity pool, treating you to an endless light show across the soaring skyscrapers of the city-state.",
+          image: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&w=1200&q=80",
+          gallery: [
+            "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1494949642610-fc9965da9a38?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=600&q=80"
+          ],
+          bookingLinks: {
+            booking: "https://booking.com",
+            traveloka: "https://traveloka.com",
+            agoda: "https://agoda.com",
+            expedia: "https://expedia.com",
+            trip: "https://trip.com"
+          },
+          socialLinks: {
+            instagram: "https://instagram.com",
+            tiktok: "https://tiktok.com",
+            facebook: "https://facebook.com",
+            youtube: "https://youtube.com",
+            whatsapp: "https://wa.me/6565551234"
+          },
+          videos: [
+            { label: "Gravity-Defying SkyPark Pool Experience", image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=300&q=85" },
+            { label: "High-Rise Suite Vista & Night Gardens Show", image: "https://images.unsplash.com/photo-1494949642610-fc9965da9a38?auto=format&fit=crop&w=300&q=85" }
+          ],
+          priceRange: "$$$$$",
+          startingPrice: 580,
+          amenities: ["World Class Pool", "Cityscape Skydeck", "Celebrity Dining", "Mega-Mall Access", "Luxury Spa", "Sands Club Lounge"]
+        },
+        {
+          id: 7,
+          name: "Tanjong Jara Royal Palace Resort",
+          location: "Dungun, Terengganu",
+          category: "heritage",
+          stars: 5,
+          rating: 4.8,
+          photosCount: 33,
+          desc: "Paying visual homage to the wooden royal palaces of 17th-century Malay dynasties, Tanjong Jara is a beachfront garden sanctuary resting on the serene East Coast. Guided by the Malay philosophy of Sucimurni (purity of spirit), it offers deep cultural restoration and restorative traditional herb spa remedies.",
+          image: "https://images.unsplash.com/photo-1590523277543-a94d2e4eb00b?auto=format&fit=crop&w=1200&q=80",
+          gallery: [
+            "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80"
+          ],
+          bookingLinks: {
+            booking: "https://booking.com",
+            traveloka: "https://traveloka.com",
+            expedia: "https://expedia.com"
+          },
+          socialLinks: {
+            instagram: "https://instagram.com",
+            facebook: "https://facebook.com"
+          },
+          videos: [
+            { label: "Ancient Palace Wood Architecture Exploration", image: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=300&q=85" },
+            { label: "Traditional Sucimurni Herbs Spa Treatment Demo", image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=300&q=85" }
+          ],
+          priceRange: "$$$",
+          startingPrice: 220,
+          amenities: ["Royal Architecture", "Cultural Immersion", "Holistic Spa", "Sunrise Yoga", "Golden Reefs"]
+        },
+        {
+          id: 8,
+          name: "The Ritz-Carlton Rainforest Reserve",
+          location: "Pantai Kok, Langkawi",
+          category: "resort",
+          stars: 5,
+          rating: 4.9,
+          photosCount: 74,
+          desc: "Cradled by a protected, 10-million-year-old ancient jungle that cascades directly onto a private turquoise cove, this Ritz-Carlton paradise features breathtaking architecture inspired by traditional village aesthetics, private infinity plunge pools, and three exclusive ocean-view lounges.",
+          image: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=1200&q=80",
+          gallery: [
+            "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1504609773096-104ff2c73ba4?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=600&q=80"
+          ],
+          bookingLinks: {
+            booking: "https://booking.com",
+            agoda: "https://agoda.com",
+            expedia: "https://expedia.com",
+            trip: "https://trip.com"
+          },
+          socialLinks: {
+            instagram: "https://instagram.com",
+            tiktok: "https://tiktok.com",
+            facebook: "https://facebook.com",
+            youtube: "https://youtube.com",
+            whatsapp: "https://wa.me/60412345678"
+          },
+          videos: [
+            { label: "Overwater Pavilion Villa Walkthrough Tour", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=300&q=85" },
+            { label: "Rainforest canopy Lounge Vibe & Sunrise Yoga", image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=300&q=85" }
+          ],
+          priceRange: "$$$$$",
+          startingPrice: 510,
+          amenities: ["Ancient Jungle Setting", "Private Plunge Pool", "Villages Styling", "UNESCO Geopark Tour", "Hammock Nets"]
+        },
+        {
+          id: 9,
+          name: "Berjaya Tioman Paradise Retreat",
+          location: "Tioman Island, Pahang",
+          category: "resort",
+          stars: 4,
+          rating: 4.4,
+          photosCount: 27,
+          desc: "Tioman's original coastal refuge — a lively and bright collection of wooden chalets spaced across a pristine horseshoe bay. Enjoy immediate scuba diving access to globally acclaimed coral reefs, and relax under soaring coconut trees steps from the shoreline.",
+          image: "https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=1200&q=80",
+          gallery: [
+            "https://images.unsplash.com/photo-1546026423-cc4642628d2b?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=600&q=80"
+          ],
+          bookingLinks: {
+            booking: "https://booking.com",
+            traveloka: "https://traveloka.com",
+            agoda: "https://agoda.com"
+          },
+          socialLinks: {
+            instagram: "https://instagram.com",
+            facebook: "https://facebook.com",
+            whatsapp: "https://wa.me/609123456"
+          },
+          videos: [
+            { label: "Vibrant Marine Reefs & Sunset Snorkeling Guide", image: "https://images.unsplash.com/photo-1546026423-cc4642628d2b?auto=format&fit=crop&w=300&q=85" },
+            { label: "Rustic Wooden Chalet Shoreline Walk", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=300&q=85" }
+          ],
+          priceRange: "$$",
+          startingPrice: 150,
+          amenities: ["Reef Snorkeling", "Beachfront Chalet", "PADI Diving", "Volleyball Courts", "Family Pool"]
+        },
+        {
+          id: 10,
+          name: "Shangri-La Rasa Ria Sanctuary",
+          location: "Pantai Dalit, Sabah",
+          category: "resort",
+          stars: 5,
+          rating: 4.8,
+          photosCount: 58,
+          desc: "Resting along the pristine Pantai Dalit shoreline and adjacent to 64 acres of protected rainforest nature reserve, Rasa Ria balances luxurious relaxation with high-impact wildlife conservation. Engage directly in the native orangutan restoration program and marvel at unparalleled Bornean biodiversity.",
+          image: "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80",
+          gallery: [
+            "https://images.unsplash.com/photo-1583244532610-2a234e7c3eca?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&w=600&q=80"
+          ],
+          bookingLinks: {
+            booking: "https://booking.com",
+            traveloka: "https://traveloka.com",
+            agoda: "https://agoda.com",
+            expedia: "https://expedia.com",
+            trip: "https://trip.com",
+            airbnb: "https://airbnb.com"
+          },
+          socialLinks: {
+            instagram: "https://instagram.com",
+            tiktok: "https://tiktok.com",
+            facebook: "https://facebook.com",
+            youtube: "https://youtube.com"
+          },
+          videos: [
+            { label: "Protected Wildlife Sanctuary & Orangutan Enrichment", image: "https://images.unsplash.com/photo-1583244532610-2a234e7c3eca?auto=format&fit=crop&w=300&q=85" },
+            { label: "Pristine Dalit Beach Club & Seaside Golf Course", image: "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&w=300&q=85" }
+          ],
+          priceRange: "$$$$",
+          startingPrice: 340,
+          amenities: ["Orangutan Reserve", "Signature Golf", "Seaside Dining", "Nature Trails", "Canopy Walkway", "Water Sports"]
+        },
+        {
+          id: 11,
+          name: "Capella Heritage Manor",
+          location: "Sentosa Island, Singapore",
+          category: "boutique",
+          stars: 5,
+          rating: 4.9,
+          photosCount: 66,
+          desc: "Fusing Singapore's classic colonial heritage with bold curved modern architecture by Sir Norman Foster, Capella Sentosa displays unmatched sophistication. Its sweeping, tiered cascading pools face the South China Sea, while manicured manor lawns play host to majestic peacocks and premium butler suites.",
+          image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+          gallery: [
+            "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1560185007-c5ca9d2c014d?auto=format&fit=crop&w=600&q=80"
+          ],
+          bookingLinks: {
+            booking: "https://booking.com",
+            agoda: "https://agoda.com",
+            expedia: "https://expedia.com",
+            trip: "https://trip.com"
+          },
+          socialLinks: {
+            instagram: "https://instagram.com",
+            facebook: "https://facebook.com",
+            youtube: "https://youtube.com"
+          },
+          videos: [
+            { label: "Sir Norman Foster Resort Architecture & Serene Grounds", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=300&q=85" },
+            { label: "Award-Winning Auriga Wellness Spa In-Depth", image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=300&q=85" }
+          ],
+          priceRange: "$$$$$",
+          startingPrice: 640,
+          amenities: ["Foster Architecture", "Ocean Manor Views", "Private Jacuzzi", "Dedicated Butler", "Auriga Wellness", "Library Lounge"]
+        },
+        {
+          id: 12,
+          name: "The Datai Rainforest Retreat",
+          location: "Datai Bay, Langkawi",
+          category: "villa",
+          stars: 5,
+          rating: 4.9,
+          photosCount: 49,
+          desc: "Buried safely within the emerald heart of a 10-million-year-old high canopy rainforest, The Datai rests gently above the legendary white shores of Datai Bay. Interconnected elevated wooden paths weave through rich foliage, introducing you to rare hornbills, geckos, and native dusky leaf monkeys in extreme privacy.",
+          image: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80",
+          gallery: [
+            "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=600&q=80",
+            "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=600&q=80"
+          ],
+          bookingLinks: {
+            booking: "https://booking.com",
+            traveloka: "https://traveloka.com",
+            agoda: "https://agoda.com",
+            expedia: "https://expedia.com"
+          },
+          socialLinks: {
+            instagram: "https://instagram.com",
+            tiktok: "https://tiktok.com",
+            facebook: "https://facebook.com",
+            whatsapp: "https://wa.me/604123456"
+          },
+          videos: [
+            { label: "Rainforest Immersion arrival & Ancient Flora Path", image: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=300&q=85" },
+            { label: "Luxury Canopy Pool Villa & Wilderness Spa Rituals", image: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=300&q=85" }
+          ],
+          priceRange: "$$$$$",
+          startingPrice: 540,
+          amenities: ["Rainforest Immersion", "Private Beach", "Award-Winning Dining", "Naturalist Canopy Walks", "Traditional Spa"]
+        }
+      ];
+
+      const platformNames = {
+        booking: "Booking.com",
+        traveloka: "Traveloka",
+        agoda: "Agoda",
+        expedia: "Expedia",
+        trip: "Trip.com",
+        airbnb: "Airbnb"
+      };
+
+      const platformIcons = {
+        booking: "🌐",
+        traveloka: "✈️",
+        agoda: "🗝️",
+        expedia: "💼",
+        trip: "🌏",
+        airbnb: "🏡"
+      };
+
+      const socialNames = {
+        instagram: "Instagram",
+        tiktok: "TikTok",
+        facebook: "Facebook",
+        youtube: "YouTube",
+        whatsapp: "WhatsApp"
+      };
+
+      const socialIcons = {
+        instagram: "📸",
+        tiktok: "🎵",
+        facebook: "📘",
+        youtube: "▶️",
+        whatsapp: "💬"
+      };
+
+      // ── DYNAMIC RUNTIME PREFERENCES STATE ──
+      let activeCategory = 'all';
+      let activeLocation = null;
+      let activePlatform = null;
+      let selectedAmenities = [];
+      let searchQuery = '';
+      let sortBy = 'featured';
+      let favorites = [];
+
+      // Load favorites from localStorage if present
+      try {
+        const stored = localStorage.getItem('stayconnect_favs');
+        if (stored) favorites = JSON.parse(stored);
+      } catch (e) {
+        console.warn('Could not retrieve private bookmarks', e);
+      }
+
+      // Live Modal active hotel states
+      let currentActiveHotel = null;
+      let currentSelectedHeroImage = '';
+
+      // Unique definitions
+      const categories = [
+        { id: 'all', label: 'All Stays' },
+        { id: 'resort', label: 'Beach Resorts & Retreats' },
+        { id: 'city', label: 'Metropolitan Luxury' },
+        { id: 'boutique', label: 'Boutique Collection' },
+        { id: 'heritage', label: 'Heritage Mansions' },
+        { id: 'villa', label: 'Private Sanctuary Villas' }
+      ];
+
+      const locations = [
+        { id: 'langkawi', label: 'Langkawi' },
+        { id: 'kuala-lumpur', label: 'Kuala Lumpur' },
+        { id: 'penang', label: 'Penang' },
+        { id: 'sabah', label: 'Sabah' },
+        { id: 'bali', label: 'Bali' },
+        { id: 'singapore', label: 'Singapore' },
+        { id: 'terengganu', label: 'Terengganu' },
+        { id: 'pahang', label: 'Tioman Island' }
+      ];
+
+      const allAmenities = Array.from(new Set(hotelsData.flatMap(h => h.amenities)));
+
+      // ── RENDER SIDEBAR LISTS ──
+      function setupSidebarFilters() {
+        // Categories list
+        const catList = document.getElementById('category-filter-list');
+        catList.innerHTML = categories.map(cat => {
+          const isActive = activeCategory === cat.id;
+          return `
+            <button
+              data-category-id="${cat.id}"
+              class="category-btn w-full text-left px-3 py-2 rounded-xl text-sm transition-all flex items-center justify-between ${
+                isActive 
+                  ? 'bg-amber-50/70 border border-amber-200/70 text-amber-950 font-semibold' 
+                  : 'text-stone-500 hover:text-stone-800 hover:bg-stone-50'
+              }"
+            >
+              <span class="flex items-center gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full ${isActive ? 'bg-amber-600 scale-125' : 'bg-stone-300'} transition-all"></span>
+                ${cat.label}
+              </span>
+              ${isActive ? '<i data-lucide="check" class="w-3.5 h-3.5 text-amber-700"></i>' : ''}
+            </button>
+          `;
+        }).join('');
+
+        // Region pills
+        const regList = document.getElementById('region-filter-list');
+        regList.innerHTML = `
+          <button
+            id="region-all-btn"
+            class="px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
+              activeLocation === null
+                ? 'bg-stone-900 text-white border-stone-900'
+                : 'bg-white border-stone-200 text-stone-500 hover:text-stone-800 hover:border-stone-400'
+            }"
+          >
+            All Regions
+          </button>
+        ` + locations.map(loc => {
+          const isActive = activeLocation === loc.id;
+          return `
+            <button
+              data-location-id="${loc.id}"
+              class="region-pill px-3 py-1.5 rounded-xl text-xs font-medium border transition-all ${
+                isActive
+                  ? 'bg-amber-700 text-white border-amber-700 shadow-sm shadow-amber-700/10'
+                  : 'bg-white border-stone-200 text-stone-600 hover:text-stone-855 hover:border-stone-400'
+              }"
+            >
+              ${loc.label}
+            </button>
+          `;
+        }).join('');
+
+        // Platform channels
+        const platGrid = document.getElementById('platform-filter-grid');
+        platGrid.innerHTML = Object.keys(platformNames).map(plat => {
+          const isActive = activePlatform === plat;
+          return `
+            <button
+              data-platform-id="${plat}"
+              class="platform-btn p-2.5 rounded-xl border text-left transition-all flex flex-col gap-1.5 ${
+                isActive
+                  ? 'bg-amber-50/60 border-amber-300 text-amber-950 font-semibold shadow-xs'
+                  : 'bg-stone-50/50 hover:bg-white border-stone-200 text-stone-650 hover:text-stone-850 hover:border-stone-300'
+              }"
+            >
+              <span class="text-base">${platformIcons[plat]}</span>
+              <span class="text-[11px] font-bold tracking-tight truncate leading-none">${platformNames[plat]}</span>
+            </button>
+          `;
+        }).join('');
+
+        // Amenities check row
+        const ameList = document.getElementById('amenity-checkbox-list');
+        ameList.innerHTML = allAmenities.map(amenity => {
+          const isSelected = selectedAmenities.includes(amenity);
+          return `
+            <label class="flex items-center gap-3 text-xs text-stone-650 cursor-pointer group hover:text-stone-900 transition-colors">
+              <div class="relative">
+                <input
+                  type="checkbox"
+                  data-amenity="${amenity}"
+                  ${isSelected ? 'checked' : ''}
+                  class="amenity-checkbox sr-only"
+                />
+                <div class="w-4 h-4 rounded-md border flex items-center justify-center transition-all ${
+                  isSelected 
+                    ? 'bg-amber-600 border-amber-600 text-white' 
+                    : 'border-stone-300 group-hover:border-stone-400 bg-white'
+                }">
+                  ${isSelected ? '<i data-lucide="check" class="w-3 h-3 stroke-[3]"></i>' : ''}
+                </div>
+              </div>
+              <span>${amenity}</span>
+            </label>
+          `;
+        }).join('');
+
+        // Initialize lucide icons for elements created
+        lucide.createIcons();
+
+        // Attach listeners
+        attachSidebarEvents();
+      }
+
+      // Add listeners for sidebar filters
+      function attachSidebarEvents() {
+        // Category selections
+        document.querySelectorAll('.category-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            activeCategory = btn.getAttribute('data-category-id');
+            updateUI();
+          });
+        });
+
+        // Region selections
+        const regionAll = document.getElementById('region-all-btn');
+        if (regionAll) {
+          regionAll.addEventListener('click', () => {
+            activeLocation = null;
+            updateUI();
+          });
+        }
+        document.querySelectorAll('.region-pill').forEach(btn => {
+          btn.addEventListener('click', () => {
+            activeLocation = btn.getAttribute('data-location-id');
+            updateUI();
+          });
+        });
+
+        // Platform selections
+        document.querySelectorAll('.platform-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const plat = btn.getAttribute('data-platform-id');
+            activePlatform = activePlatform === plat ? null : plat;
+            updateUI();
+          });
+        });
+
+        // Amenity toggles
+        document.querySelectorAll('.amenity-checkbox').forEach(input => {
+          input.addEventListener('change', () => {
+            const ame = input.getAttribute('data-amenity');
+            if (input.checked) {
+              if (!selectedAmenities.includes(ame)) selectedAmenities.push(ame);
+            } else {
+              selectedAmenities = selectedAmenities.filter(a => a !== ame);
+            }
+            updateUI();
+          });
+        });
+      }
+
+      // ── COMPUTE FILTERING & RENDER HOTEL LISTINGS ──
+      function getFilteredAndSorted() {
+        let result = [...hotelsData];
+
+        // Category Filter
+        if (activeCategory !== 'all') {
+          result = result.filter(h => h.category === activeCategory);
+        }
+
+        // Active Platform Filter
+        if (activePlatform) {
+          result = result.filter(h => h.bookingLinks[activePlatform]);
+        }
+
+        // Location query
+        if (activeLocation) {
+          result = result.filter(h => h.location.toLowerCase().includes(activeLocation.toLowerCase()));
+        }
+
+        // Search text
+        if (searchQuery.trim()) {
+          const q = searchQuery.toLowerCase().trim();
+          result = result.filter(h => 
+            h.name.toLowerCase().includes(q) ||
+            h.location.toLowerCase().includes(q) ||
+            h.desc.toLowerCase().includes(q) ||
+            h.amenities.some(a => a.toLowerCase().includes(q))
+          );
+        }
+
+        // Selected Amenities Multi-selector
+        if (selectedAmenities.length > 0) {
+          result = result.filter(h => 
+            selectedAmenities.every(amenity => h.amenities.includes(amenity))
+          );
+        }
+
+        // Sort By Logic
+        if (sortBy === 'lowest') {
+          result.sort((a, b) => a.startingPrice - b.startingPrice);
+        } else if (sortBy === 'highest') {
+          result.sort((a, b) => b.startingPrice - a.startingPrice);
+        } else if (sortBy === 'rating') {
+          result.sort((a, b) => b.rating - a.rating);
+        } else if (sortBy === 'alphabetical') {
+          result.sort((a, b) => a.name.localeCompare(b.name));
+        }
+
+        return result;
+      }
+
+      // Render Active Preferences Tags Row
+      function renderPreferencePills() {
+        const container = document.getElementById('pref-pills-container');
+        let pillsHtml = '';
+
+        // Category Tag
+        const catLabel = categories.find(c => c.id === activeCategory)?.label || 'All';
+        pillsHtml += `
+          <div class="text-xs bg-stone-100 px-3 py-1.5 rounded-lg flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+            <span>Category: <strong class="text-stone-800">${catLabel}</strong></span>
+          </div>
+        `;
+
+        // Region Tag
+        if (activeLocation) {
+          pillsHtml += `
+            <div class="text-xs bg-stone-100 px-3 py-1.5 rounded-lg flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-stone-500"></span>
+              <span class="capitalize">State: <strong class="text-stone-800">${activeLocation}</strong></span>
+            </div>
+          `;
+        }
+
+        // Platform Tag
+        if (activePlatform) {
+          pillsHtml += `
+            <div class="text-xs bg-stone-100 px-3 py-1.5 rounded-lg flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+              <span>Platform: <strong class="text-stone-800">${platformNames[activePlatform]}</strong></span>
+            </div>
+          `;
+        }
+
+        // Amenities Count Tag
+        if (selectedAmenities.length > 0) {
+          pillsHtml += `
+            <div class="text-xs bg-stone-100 px-3 py-1.5 rounded-lg flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span>Amenities: <strong class="text-stone-800">${selectedAmenities.length} selected</strong></span>
+            </div>
+          `;
+        }
+
+        container.innerHTML = pillsHtml;
+      }
+
+      // Render Grid cards
+      function renderHotelGrid() {
+        const list = getFilteredAndSorted();
+        const grid = document.getElementById('hotels-grid');
+        const countHeader = document.getElementById('catalogue-headline');
+        const emptyState = document.getElementById('empty-state-card');
+
+        // Update total counters
+        countHeader.textContent = `${list.length} Luxury ${list.length === 1 ? 'Stay' : 'Stays'} Found`;
+
+        if (list.length === 0) {
+          grid.classList.add('hidden');
+          emptyState.classList.remove('hidden');
+          return;
+        }
+
+        grid.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+
+        grid.innerHTML = list.map(hotel => {
+          const isFavorite = favorites.includes(hotel.id);
+          
+          // Generate Booking Icons
+          const bookingsKeys = Object.keys(hotel.bookingLinks);
+          const channelIconsLine = bookingsKeys.slice(0, 3).map(key => `
+            <span class="text-xs" title="${platformNames[key]}">
+              ${platformIcons[key]}
+            </span>
+          `).join('');
+
+          // Generate Amenities Pills
+          const amenitiesLine = hotel.amenities.slice(0, 3).map(ame => `
+            <span class="text-[10px] bg-stone-100 text-stone-600 px-2 py-0.5 rounded-md font-semibold font-sans">
+              ${ame}
+            </span>
+          `).join('');
+
+          const overflowAmeText = hotel.amenities.length > 3 
+            ? `<span class="text-[9px] text-stone-400 font-bold px-1.5 flex items-center">+${hotel.amenities.length - 3}</span>`
+            : '';
+
+          return `
+            <article
+              data-hotel-id="${hotel.id}"
+              class="hotel-card-block bg-white rounded-2xl overflow-hidden border border-stone-200/65 hover:border-stone-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col"
+            >
+              <!-- Cover image wrapper -->
+              <div class="relative aspect-[4/3] w-full bg-stone-100 overflow-hidden">
+                <img
+                  src="${hotel.image}"
+                  alt="${hotel.name}"
+                  referrerPolicy="no-referrer"
+                  class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-104"
+                />
+                
+                <!-- Black gradient screen overlay -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-80"></div>
+
+                <!-- Left Top Info tag count -->
+                <div class="absolute top-3 left-3 flex items-center gap-1.5">
+                  <div class="bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-lg shadow-xs text-[10px] font-extrabold tracking-widest uppercase text-stone-600 flex items-center gap-1">
+                    📷 ${hotel.photosCount}
+                  </div>
+                </div>
+
+                <!-- Heart Wishlist Selection Overlay -->
+                <div class="absolute top-3 right-3 flex items-center gap-1.5">
+                  <button
+                    data-wishlist-id="${hotel.id}"
+                    class="wishlist-toggle-btn w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
+                      isFavorite 
+                        ? 'bg-rose-500 text-white shadow-sm shadow-rose-550/25' 
+                        : 'bg-white/95 backdrop-blur-md text-stone-500 hover:text-rose-500 hover:scale-105'
+                    }"
+                  >
+                    <i data-lucide="heart" class="w-4 h-4 ${isFavorite ? 'fill-current' : ''}"></i>
+                  </button>
+                </div>
+
+                <!-- Ratings Overlay Star Row -->
+                <div class="absolute bottom-3 left-3 bg-stone-900/90 backdrop-blur-md text-white px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1">
+                  <i data-lucide="star" class="w-3 h-3 fill-amber-400 text-amber-400"></i>
+                  <span>${hotel.rating}</span>
+                  <span class="text-stone-400 text-[10px] font-normal">(${hotel.stars}★)</span>
+                </div>
+
+                <!-- Price overlay display -->
+                <div class="absolute bottom-3 right-3 bg-amber-600 text-white rounded-lg px-2.5 py-1 text-xs font-bold font-mono tracking-tight shadow-md">
+                  $${hotel.startingPrice}+/nt
+                </div>
+              </div>
+
+              <!-- Content Body text -->
+              <div class="p-4 flex-1 flex flex-col justify-between space-y-3.5">
+                <div>
+                  <span class="text-[10px] uppercase font-bold tracking-widest text-stone-400 block mb-1">
+                    📍 ${hotel.location}
+                  </span>
+                  
+                  <h3 class="text-base font-bold text-stone-900 tracking-tight leading-snug group-hover:text-amber-850 transition-colors">
+                    ${hotel.name}
+                  </h3>
+
+                  <p class="text-xs text-stone-500 line-clamp-2 mt-1.5 leading-relaxed">
+                    ${hotel.desc}
+                  </p>
+                </div>
+
+                <!-- Amenities List row -->
+                <div class="flex flex-wrap gap-1 mt-1">
+                  ${amenitiesLine}
+                  ${overflowAmeText}
+                </div>
+
+                <!-- Footer statistics row -->
+                <div class="pt-3 border-t border-stone-100 flex items-center justify-between text-xs">
+                  <div class="flex items-center gap-1">
+                    ${channelIconsLine}
+                    <span class="text-[10px] text-stone-400 font-bold ml-1">
+                      ${bookingsKeys.length} channels
+                    </span>
+                  </div>
+
+                  <div class="text-amber-800 font-bold tracking-wide uppercase text-[10px] flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                    Explore Stay <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                  </div>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('');
+
+        lucide.createIcons();
+
+        // Bind clicks to individual cards
+        document.querySelectorAll('.hotel-card-block').forEach(card => {
+          card.addEventListener('click', (e) => {
+            // Avoid triggering details if the user clicks wishlist button
+            if (e.target.closest('.wishlist-toggle-btn')) return;
+
+            const id = +card.getAttribute('data-hotel-id');
+            const hotel = hotelsData.find(h => h.id === id);
+            if (hotel) openDetailModal(hotel);
+          });
+        });
+
+        // Wishlist button clicks
+        document.querySelectorAll('.wishlist-toggle-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = +btn.getAttribute('data-wishlist-id');
+            toggleWishlist(id);
+          });
+        });
+      }
+
+      // Handle custom local wishlist saved bookmarks
+      function toggleWishlist(id) {
+        if (favorites.includes(id)) {
+          favorites = favorites.filter(fId => fId !== id);
+        } else {
+          favorites.push(id);
+        }
+        try {
+          localStorage.setItem('stayconnect_favs', JSON.stringify(favorites));
+        } catch (e) {
+          console.error(e);
+        }
+        updateUI();
+      }
+
+      // Live aggregate updates
+      function updateUI() {
+        setupSidebarFilters();
+        renderPreferencePills();
+        renderHotelGrid();
+
+        // Show/hide platform clean button if chosen
+        const clearPlatBtn = document.getElementById('clear-platform-btn');
+        if (activePlatform) {
+          clearPlatBtn.classList.remove('hidden');
+        } else {
+          clearPlatBtn.classList.add('hidden');
+        }
+
+        // Show/hide clear search icon
+        const searchClear = document.getElementById('search-clear-btn');
+        if (searchQuery.length > 0) {
+          searchClear.classList.remove('hidden');
+        } else {
+          searchClear.classList.add('hidden');
+        }
+      }
+
+      // ── ESTIMATOR ENGINE CALCULATIONS ──
+      function calculateStayEstimate() {
+        if (!currentActiveHotel) return;
+
+        const checkInVal = document.getElementById('calc-check-in').value;
+        const checkOutVal = document.getElementById('calc-check-out').value;
+        const guestsVal = +document.getElementById('calc-guests').value;
+
+        const start = new Date(checkInVal);
+        const end = new Date(checkOutVal);
+        const diffTime = Math.abs(end.getTime() - start.getTime());
+        let nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (isNaN(nights) || nights <= 0) nights = 1;
+
+        // Compute pricing
+        const baseTotal = currentActiveHotel.startingPrice * nights;
+        const levyTotal = guestsVal * 12; // $12 flat tax levy per guests count
+        const ultimateTotal = baseTotal + levyTotal;
+
+        // Populate elements
+        document.getElementById('calc-computed-nights').textContent = nights;
+        document.getElementById('calc-computed-guests').textContent = guestsVal;
+        document.getElementById('calc-base-total').textContent = `$${baseTotal} USD`;
+        document.getElementById('calc-levy-total').textContent = `$${levyTotal} USD`;
+        document.getElementById('calc-ultimate-total').textContent = `$${ultimateTotal} USD`;
+      }
+
+      // ── MODEL WINDOW ACTIONS ──
+      function openDetailModal(hotel) {
+        currentActiveHotel = hotel;
+        currentSelectedHeroImage = hotel.image;
+
+        // Populate header covers
+        document.getElementById('modal-cover-img').src = currentSelectedHeroImage;
+        document.getElementById('modal-region-caption').textContent = `📍 ${hotel.location}`;
+        document.getElementById('modal-title-caption').textContent = hotel.name;
+        document.getElementById('modal-rating-badge').textContent = `${hotel.rating} ★ Rating`;
+        document.getElementById('modal-stars-count').textContent = `${hotel.stars} Star Level`;
+        document.getElementById('modal-price-tier').textContent = `Starting at $${hotel.startingPrice} per night`;
+
+        // Render photo gallery strip
+        const stripContainer = document.getElementById('modal-gallery-strip');
+        const imagesList = [hotel.image, ...hotel.gallery.slice(0, 4)];
+        stripContainer.innerHTML = imagesList.map((img, idx) => `
+          <button
+            data-swap-img="${img}"
+            class="gallery-thumbnail-btn relative aspect-[4/3] rounded-xl overflow-hidden border-2 transition-all ${
+              currentSelectedHeroImage === img 
+                ? 'border-amber-600 ring-2 ring-amber-500/20 scale-102' 
+                : 'border-transparent hover:border-stone-300'
+            }"
+          >
+            <img src="${img}" alt="Preview" referrerPolicy="no-referrer" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-black/15 hover:bg-transparent transition-colors"></div>
+          </button>
+        `).join('');
+
+        // Attach clicks to photo thumbnails swapper
+        document.querySelectorAll('.gallery-thumbnail-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const targetSrc = btn.getAttribute('data-swap-img');
+            currentSelectedHeroImage = targetSrc;
+            document.getElementById('modal-cover-img').src = currentSelectedHeroImage;
+            
+            // Re-highlight borders
+            document.querySelectorAll('.gallery-thumbnail-btn').forEach(b => {
+              b.classList.remove('border-amber-600', 'ring-2', 'ring-amber-500/20', 'scale-102');
+              b.classList.add('border-transparent');
+            });
+            btn.classList.add('border-amber-600', 'ring-2', 'ring-amber-500/20', 'scale-102');
+            btn.classList.remove('border-transparent');
+          });
+        });
+
+        // About Description
+        document.getElementById('modal-full-desc').textContent = hotel.desc;
+
+        // Amenities Checkrow
+        const amenityGrid = document.getElementById('modal-amenity-grid');
+        amenityGrid.innerHTML = hotel.amenities.map(ame => `
+          <div class="flex items-center gap-2 bg-stone-50 px-3 py-2 rounded-xl border border-stone-100/50">
+            <i data-lucide="check" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+            <span>${ame}</span>
+          </div>
+        `).join('');
+
+        // Hide video streaming player on initialization
+        document.getElementById('video-stream-container').classList.add('hidden');
+        document.getElementById('modal-videos-grid').classList.remove('hidden');
+
+        // Populate Video Blocks
+        const vidsGrid = document.getElementById('modal-videos-grid');
+        vidsGrid.innerHTML = hotel.videos.map((vid, idx) => `
+          <div
+            data-video-target-label="${vid.label}"
+            class="video-card-launch-btn group border border-stone-200 rounded-2xl overflow-hidden cursor-pointer hover:border-amber-600 bg-stone-50 transition-all flex flex-col"
+          >
+            <div class="relative aspect-[16/10] bg-stone-100 overflow-hidden">
+              <img
+                src="${vid.image}"
+                alt="${vid.label}"
+                class="w-full h-full object-cover transition-transform group-hover:scale-104"
+              />
+              <div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-90 group-hover:bg-black/40 transition-all">
+                <div class="w-10 h-10 rounded-full bg-amber-500 text-stone-950 flex items-center justify-center shadow-lg transition-transform group-hover:scale-110">
+                  ▶
+                </div>
+              </div>
+            </div>
+            <p class="p-2.5 text-stone-750 text-[11px] font-bold tracking-tight hover:text-amber-800 leading-tight">
+              ${vid.label}
+            </p>
+          </div>
+        `).join('');
+
+        // Video log play actions listeners
+        document.querySelectorAll('.video-card-launch-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const labelText = btn.getAttribute('data-video-target-label');
+            
+            // Show player & populate title details
+            document.getElementById('video-stream-label').textContent = labelText;
+            document.getElementById('video-stream-container').classList.remove('hidden');
+            document.getElementById('modal-videos-grid').classList.add('hidden');
+          });
+        });
+
+        // Compute Direct Booking Links
+        const linksList = document.getElementById('modal-booking-links-list');
+        linksList.innerHTML = Object.entries(hotel.bookingLinks).map(([key, url]) => {
+          const icon = platformIcons[key];
+          const name = platformNames[key];
+          return `
+            <a
+              href="${url}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="bg-white border border-stone-200 hover:border-amber-600 p-3 rounded-xl flex items-center justify-between transition-all hover:scale-101 shadow-xs"
+            >
+              <div class="flex items-center gap-3">
+                <span class="text-xl">${icon}</span>
+                <div>
+                  <span class="text-xs font-bold text-stone-850 leading-none block">${name} Partner</span>
+                  <span class="text-[10px] text-stone-400 leading-none mt-1 block">Calculate and lock in direct rate</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5 text-stone-400 hover:text-stone-700">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-amber-700">Book Link</span>
+                <i data-lucide="external-link" class="w-3.5 h-3.5 text-stone-400 shrink-0"></i>
+              </div>
+            </a>
+          `;
+        }).join('');
+
+        // Social connections lists
+        const socialGrid = document.getElementById('modal-socials-row');
+        socialGrid.innerHTML = Object.entries(hotel.socialLinks).map(([key, url]) => `
+          <a
+            href="${url}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bg-stone-50 hover:bg-white hover:border-emerald-600 border border-stone-200/60 px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 hover:text-stone-850 flex items-center gap-2 transition-all cursor-pointer"
+          >
+            <span>${socialIcons[key]}</span>
+            <span>${socialNames[key]}</span>
+          </a>
+        `).join('');
+
+        // Reset inputs on Stay Calculator
+        document.getElementById('calc-check-in').value = '2026-06-15';
+        document.getElementById('calc-check-out').value = '2026-06-20';
+        document.getElementById('calc-guests').value = '2026-06-20';
+        document.getElementById('calc-guests').selectedIndex = 1; // default '2 Adult Guests'
+        calculateStayEstimate();
+
+        // Reveal modals
+        const backdrop = document.getElementById('detail-modal-backdrop');
+        backdrop.classList.remove('hidden');
+        backdrop.classList.add('flex');
+        document.body.classList.add('overflow-hidden');
+
+        lucide.createIcons();
+      }
+
+      function closeDetailModal() {
+        const backdrop = document.getElementById('detail-modal-backdrop');
+        backdrop.classList.add('hidden');
+        backdrop.classList.remove('flex');
+        document.body.classList.remove('overflow-hidden');
+        currentActiveHotel = null;
+      }
+
+      // ── BOOTSTRAP ATTACH GLOBAL LISTENERS ──
+      function bootstrap() {
+        // Reset trigger preference pills
+        document.getElementById('reset-all-btn').addEventListener('click', () => {
+          activeCategory = 'all';
+          activePlatform = null;
+          activeLocation = null;
+          selectedAmenities = [];
+          searchQuery = '';
+          document.getElementById('search-input').value = '';
+          updateUI();
+        });
+
+        // Search trigger key entries
+        const mainSearch = document.getElementById('search-input');
+        mainSearch.addEventListener('input', (e) => {
+          searchQuery = e.target.value;
+          updateUI();
+        });
+
+        // Search clear button
+        document.getElementById('search-clear-btn').addEventListener('click', () => {
+          searchQuery = '';
+          mainSearch.value = '';
+          updateUI();
+        });
+
+        // Platform filter clearing button
+        document.getElementById('clear-platform-btn').addEventListener('click', () => {
+          activePlatform = null;
+          updateUI();
+        });
+
+        // Empty state trigger clearing all filters
+        document.getElementById('empty-clear-filters-btn').addEventListener('click', () => {
+          activeCategory = 'all';
+          activePlatform = null;
+          activeLocation = null;
+          selectedAmenities = [];
+          searchQuery = '';
+          mainSearch.value = '';
+          updateUI();
+        });
+
+        // Spotlight clicks
+        document.getElementById('spotlight-heritage-btn').addEventListener('click', () => {
+          activeCategory = 'heritage';
+          updateUI();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        document.getElementById('spotlight-villa-btn').addEventListener('click', () => {
+          activeCategory = 'villa';
+          updateUI();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Sorting selector dropdown
+        document.getElementById('sort-select').addEventListener('change', (e) => {
+          sortBy = e.target.value;
+          updateUI();
+        });
+
+        // Modal closed triggers
+        document.getElementById('modal-close-btn').addEventListener('click', closeDetailModal);
+        document.getElementById('modal-scrim-bg').addEventListener('click', closeDetailModal);
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') closeDetailModal();
+        });
+
+        // Video close player triggers
+        document.getElementById('video-player-close-btn').addEventListener('click', () => {
+          document.getElementById('video-stream-container').classList.add('hidden');
+          document.getElementById('modal-videos-grid').classList.remove('hidden');
+        });
+
+        // Estimator calculator triggers
+        document.getElementById('calc-check-in').addEventListener('change', calculateStayEstimate);
+        document.getElementById('calc-check-out').addEventListener('change', calculateStayEstimate);
+        document.getElementById('calc-guests').addEventListener('change', calculateStayEstimate);
+
+        // Core Rendering
+        updateUI();
+      }
+
+      // Run on content launch
+      window.addEventListener('DOMContentLoaded', bootstrap);
+    </script>
+  </body>
 </html>
