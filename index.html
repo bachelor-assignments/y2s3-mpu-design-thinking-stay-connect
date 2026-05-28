@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Stay Connect — Discover Hotels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0e0e12;
+  --surface:#16161d;
+  --card:#1e1e28;
+  --card2:#252533;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.12);
+  --text:#f0f0f5;
+  --muted:#7a7a95;
+  --muted2:#55556a;
+  --accent:#e8b86d;
+  --accent2:#f5d08a;
+  --teal:#2dd4bf;
+  --white:#ffffff;
+}
+
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;height:62px;
+  background:rgba(14,14,18,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+
+.logo{display:flex;align-items:center;gap:0.5rem;text-decoration:none}
+.logo-icon{
+  width:34px;height:34px;border-radius:9px;
+  background:linear-gradient(135deg,var(--accent),#d4963a);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:0.85rem;color:#0e0e12;
+  flex-shrink:0;
+}
+.logo-text{font-size:1.15rem;font-weight:700;color:var(--white);letter-spacing:-0.02em}
+.logo-text span{color:var(--accent)}
+
+.search-bar{
+  display:flex;align-items:center;
+  background:var(--card);
+  border:1px solid var(--border2);
+  border-radius:10px;
+  padding:0 1rem;
+  gap:0.6rem;
+  width:340px;
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.search-bar:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,184,109,0.1)}
+.search-bar input{
+  background:none;border:none;outline:none;
+  font-family:'Outfit',sans-serif;font-size:0.85rem;
+  color:var(--text);width:100%;padding:0.6rem 0;
+}
+.search-bar input::placeholder{color:var(--muted)}
+.search-icon{color:var(--muted);font-size:0.9rem;flex-shrink:0}
+
+.topbar-right{display:flex;align-items:center;gap:0.8rem}
+.btn-nav{
+  font-size:0.75rem;font-weight:600;letter-spacing:0.03em;
+  padding:0.5rem 1.1rem;border-radius:8px;text-decoration:none;
+  transition:all 0.2s;cursor:pointer;border:none;font-family:'Outfit',sans-serif;
+}
+.btn-ghost-nav{background:transparent;border:1px solid var(--border2);color:var(--text)}
+.btn-ghost-nav:hover{border-color:var(--accent);color:var(--accent)}
+.btn-accent-nav{background:var(--accent);color:#0e0e12}
+.btn-accent-nav:hover{background:var(--accent2);transform:translateY(-1px)}
+
+/* ── LAYOUT ── */
+.page{display:flex;min-height:calc(100vh - 62px)}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:220px;flex-shrink:0;
+  padding:1.8rem 1.2rem;
+  border-right:1px solid var(--border);
+  position:sticky;top:62px;height:calc(100vh - 62px);
+  overflow-y:auto;
+}
+
+.sidebar-section{margin-bottom:2rem}
+.sidebar-label{
+  font-size:0.6rem;font-weight:700;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--muted);
+  margin-bottom:0.7rem;padding:0 0.4rem;
+}
+
+.filter-chip{
+  display:flex;align-items:center;gap:0.6rem;
+  padding:0.5rem 0.7rem;border-radius:8px;
+  font-size:0.8rem;font-weight:500;color:var(--muted);
+  cursor:pointer;transition:background 0.15s,color 0.15s;
+  user-select:none;
+}
+.filter-chip:hover{background:var(--card);color:var(--text)}
+.filter-chip.active{background:rgba(232,184,109,0.12);color:var(--accent);font-weight:600}
+.filter-chip .chip-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:currentColor;opacity:0.6;flex-shrink:0;
+}
+
+.platform-filter{
+  display:flex;align-items:center;gap:0.6rem;
+  padding:0.45rem 0.7rem;border-radius:8px;
+  font-size:0.78rem;font-weight:500;color:var(--muted);
+  cursor:pointer;transition:all 0.15s;user-select:none;
+}
+.platform-filter:hover{background:var(--card);color:var(--text)}
+.platform-filter.active{background:rgba(45,212,191,0.1);color:var(--teal)}
+.platform-filter .pf-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
+
+/* ── MAIN FEED ── */
+.feed{flex:1;padding:2rem 2rem 4rem;min-width:0}
+
+.feed-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1.5rem;
+}
+.feed-title{font-size:1.05rem;font-weight:700;color:var(--text)}
+.feed-count{font-size:0.78rem;color:var(--muted);margin-top:2px}
+
+.sort-row{display:flex;align-items:center;gap:0.5rem}
+.sort-btn{
+  font-family:'Outfit',sans-serif;font-size:0.73rem;font-weight:600;
+  padding:0.38rem 0.85rem;border-radius:6px;border:1px solid var(--border2);
+  background:transparent;color:var(--muted);cursor:pointer;transition:all 0.15s;
+}
+.sort-btn.active{background:var(--card2);color:var(--text);border-color:var(--border2)}
+.sort-btn:hover{color:var(--text)}
+
+/* ── HOTEL CARD GRID ── */
+.hotel-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:1.4rem;
+}
+
+.hotel-card{
+  background:var(--card);
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  cursor:pointer;
+  transition:transform 0.25s,border-color 0.25s,box-shadow 0.25s;
+  position:relative;
+}
+.hotel-card:hover{
+  transform:translateY(-4px);
+  border-color:var(--border2);
+  box-shadow:0 20px 50px rgba(0,0,0,0.4);
+}
+
+/* thumbnail */
+.card-thumb{
+  position:relative;
+  height:190px;
+  overflow:hidden;
+}
+.thumb-img{
+  width:100%;height:100%;
+  background-size:cover;background-position:center;
+  transition:transform 0.4s ease;
+}
+.hotel-card:hover .thumb-img{transform:scale(1.04)}
+
+.thumb-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(14,14,18,0.85) 0%,rgba(14,14,18,0.1) 50%,transparent 100%);
+}
+
+/* star rating badge */
+.star-badge{
+  position:absolute;top:10px;right:10px;
+  background:rgba(14,14,18,0.75);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:6px;padding:0.2rem 0.55rem;
+  font-size:0.72rem;font-weight:600;color:var(--accent);
+  display:flex;align-items:center;gap:3px;
+}
+
+/* photo count */
+.photo-count{
+  position:absolute;top:10px;left:10px;
+  background:rgba(14,14,18,0.75);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:6px;padding:0.2rem 0.55rem;
+  font-size:0.68rem;font-weight:600;color:rgba(255,255,255,0.8);
+}
+
+/* platform tags on thumbnail */
+.platform-tags{
+  position:absolute;bottom:10px;left:10px;
+  display:flex;gap:5px;flex-wrap:wrap;
+}
+.ptag{
+  height:22px;padding:0 7px;
+  background:rgba(14,14,18,0.82);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:5px;
+  font-size:0.6rem;font-weight:700;letter-spacing:0.03em;
+  color:var(--white);
+  display:flex;align-items:center;gap:3px;
+  white-space:nowrap;
+}
+.ptag.booking{border-color:rgba(0,100,210,0.5);color:#60a5fa}
+.ptag.traveloka{border-color:rgba(0,160,90,0.5);color:#34d399}
+.ptag.agoda{border-color:rgba(229,68,68,0.5);color:#f87171}
+.ptag.expedia{border-color:rgba(250,180,0,0.5);color:#fbbf24}
+.ptag.trip{border-color:rgba(0,160,200,0.5);color:#38bdf8}
+.ptag.airbnb{border-color:rgba(255,90,95,0.5);color:#fb7185}
+
+/* card body */
+.card-body{padding:1rem 1rem 1.1rem}
+
+.card-location{
+  font-size:0.68rem;font-weight:600;letter-spacing:0.08em;
+  text-transform:uppercase;color:var(--muted);
+  margin-bottom:0.3rem;
+  display:flex;align-items:center;gap:4px;
+}
+
+.card-name{
+  font-size:1rem;font-weight:700;
+  color:var(--text);line-height:1.25;
+  margin-bottom:0.5rem;
+}
+
+.card-desc{
+  font-size:0.77rem;line-height:1.55;
+  color:var(--muted);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  margin-bottom:0.8rem;
+}
+
+.card-meta{
+  display:flex;align-items:center;justify-content:space-between;
+}
+
+.card-social{display:flex;gap:6px}
+.social-icon-sm{
+  width:24px;height:24px;border-radius:5px;
+  background:var(--card2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.7rem;transition:background 0.15s;
+}
+.hotel-card:hover .social-icon-sm{background:var(--border2)}
+
+.card-cta{
+  font-size:0.7rem;font-weight:700;letter-spacing:0.05em;
+  color:var(--accent);opacity:0;
+  transition:opacity 0.2s;
+}
+.hotel-card:hover .card-cta{opacity:1}
+
+/* ── MODAL ── */
+.modal-backdrop{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);
+  display:flex;align-items:flex-start;justify-content:center;
+  padding:2rem 1rem;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.3s;
+  overflow-y:auto;
+}
+.modal-backdrop.open{opacity:1;pointer-events:all}
+
+.modal{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:18px;
+  width:100%;max-width:860px;
+  overflow:hidden;
+  transform:translateY(24px) scale(0.98);
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  position:relative;flex-shrink:0;
+}
+.modal-backdrop.open .modal{transform:none}
+
+.modal-close{
+  position:absolute;top:1rem;right:1rem;z-index:10;
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(14,14,18,0.8);backdrop-filter:blur(10px);
+  border:1px solid var(--border2);
+  color:var(--text);font-size:1rem;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background 0.2s,transform 0.2s;
+}
+.modal-close:hover{background:var(--card2);transform:scale(1.1)}
+
+/* modal hero */
+.modal-hero{position:relative;height:300px;overflow:hidden}
+.modal-hero-img{width:100%;height:100%;background-size:cover;background-position:center}
+.modal-hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,var(--surface) 0%,rgba(14,14,18,0.3) 50%,transparent 100%);
+}
+.modal-hero-content{
+  position:absolute;bottom:1.5rem;left:2rem;right:5rem;
+}
+.modal-location{
+  font-size:0.68rem;font-weight:700;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:0.4rem;
+}
+.modal-name{
+  font-family:'Playfair Display',serif;
+  font-size:2rem;font-weight:700;line-height:1.15;
+  color:var(--white);margin-bottom:0.5rem;
+}
+.modal-stars{color:var(--accent);font-size:0.85rem;letter-spacing:2px}
+
+/* modal body */
+.modal-body{padding:0 2rem 2rem}
+
+/* gallery strip */
+.gallery-strip{
+  display:flex;gap:8px;margin-bottom:2rem;
+  overflow-x:auto;padding-bottom:4px;
+  scrollbar-width:thin;scrollbar-color:var(--border2) transparent;
+}
+.gallery-strip-item{
+  flex-shrink:0;width:110px;height:75px;
+  border-radius:8px;overflow:hidden;cursor:pointer;
+  border:2px solid transparent;transition:border-color 0.2s,transform 0.2s;
+}
+.gallery-strip-item:hover{border-color:var(--accent);transform:scale(1.03)}
+.gallery-strip-img{width:100%;height:100%;background-size:cover;background-position:center}
+
+.modal-section-title{
+  font-size:0.65rem;font-weight:700;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--muted);
+  margin-bottom:1rem;
+  display:flex;align-items:center;gap:0.5rem;
+}
+.modal-section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* description */
+.modal-desc{
+  font-size:0.88rem;line-height:1.75;color:rgba(240,240,245,0.8);
+  margin-bottom:2rem;
+}
+
+/* booking platforms */
+.booking-platforms{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+  gap:0.8rem;margin-bottom:2rem;
+}
+.booking-btn{
+  display:flex;align-items:center;gap:0.7rem;
+  padding:0.75rem 1rem;
+  background:var(--card);border:1px solid var(--border2);border-radius:10px;
+  text-decoration:none;color:var(--text);
+  font-size:0.8rem;font-weight:600;
+  transition:all 0.2s;
+}
+.booking-btn:hover{border-color:var(--accent);background:rgba(232,184,109,0.06);transform:translateY(-2px)}
+.booking-btn .b-icon{font-size:1.1rem;flex-shrink:0}
+.booking-btn .b-name{flex:1}
+.booking-btn .b-arrow{color:var(--muted);font-size:0.8rem}
+
+/* socials */
+.social-row{display:flex;gap:0.8rem;flex-wrap:wrap;margin-bottom:2rem}
+.social-btn{
+  display:flex;align-items:center;gap:0.6rem;
+  padding:0.6rem 1rem;
+  background:var(--card);border:1px solid var(--border2);border-radius:8px;
+  text-decoration:none;color:var(--text);
+  font-size:0.78rem;font-weight:600;
+  transition:all 0.2s;
+}
+.social-btn:hover{border-color:var(--teal);background:rgba(45,212,191,0.06)}
+.social-btn .s-icon{font-size:1rem}
+
+/* video section */
+.video-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:2rem}
+.video-thumb-card{
+  border-radius:10px;overflow:hidden;position:relative;cursor:pointer;
+  border:1px solid var(--border);transition:border-color 0.2s;
+}
+.video-thumb-card:hover{border-color:var(--accent)}
+.video-thumb-img{width:100%;aspect-ratio:16/9;background-size:cover;background-position:center;display:block}
+.video-play-overlay{
+  position:absolute;inset:0;background:rgba(0,0,0,0.3);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity 0.2s;
+}
+.video-thumb-card:hover .video-play-overlay{opacity:1}
+.play-circle{
+  width:44px;height:44px;border-radius:50%;background:var(--accent);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;color:#0e0e12;
+}
+.video-label{
+  padding:0.5rem 0.7rem;font-size:0.72rem;font-weight:600;color:var(--muted);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.hotel-card{animation:fadeUp 0.4s ease both}
+
+/* stagger */
+.hotel-card:nth-child(1){animation-delay:0.05s}
+.hotel-card:nth-child(2){animation-delay:0.1s}
+.hotel-card:nth-child(3){animation-delay:0.15s}
+.hotel-card:nth-child(4){animation-delay:0.2s}
+.hotel-card:nth-child(5){animation-delay:0.25s}
+.hotel-card:nth-child(6){animation-delay:0.3s}
+.hotel-card:nth-child(7){animation-delay:0.35s}
+.hotel-card:nth-child(8){animation-delay:0.4s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .sidebar{display:none}
+  .topbar{padding:0 1rem}
+  .search-bar{width:200px}
+  .feed{padding:1.5rem 1rem 3rem}
+  .hotel-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+  .modal-body{padding:0 1.2rem 1.5rem}
+  .modal-name{font-size:1.5rem}
+  .booking-platforms{grid-template-columns:1fr 1fr}
+  .video-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="#" class="logo">
+    <div class="logo-icon">SC</div>
+    <div class="logo-text">Stay<span>Connect</span></div>
+  </a>
+  <div class="search-bar">
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="Search hotels, cities, resorts…" id="search-input"/>
+  </div>
+  <div class="topbar-right">
+    <a href="#" class="btn-nav btn-ghost-nav">List Your Hotel</a>
+    <a href="#" class="btn-nav btn-accent-nav">Sign In</a>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Category</div>
+      <div class="filter-chip active" data-filter="all"><span class="chip-dot"></span>All Hotels</div>
+      <div class="filter-chip" data-filter="resort"><span class="chip-dot"></span>Beach Resorts</div>
+      <div class="filter-chip" data-filter="city"><span class="chip-dot"></span>City Hotels</div>
+      <div class="filter-chip" data-filter="boutique"><span class="chip-dot"></span>Boutique</div>
+      <div class="filter-chip" data-filter="heritage"><span class="chip-dot"></span>Heritage</div>
+      <div class="filter-chip" data-filter="villa"><span class="chip-dot"></span>Private Villa</div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Booking Platform</div>
+      <div class="platform-filter" data-platform="booking"><span class="pf-icon">🌐</span>Booking.com</div>
+      <div class="platform-filter" data-platform="traveloka"><span class="pf-icon">✈️</span>Traveloka</div>
+      <div class="platform-filter" data-platform="agoda"><span class="pf-icon">🗝️</span>Agoda</div>
+      <div class="platform-filter" data-platform="expedia"><span class="pf-icon">💼</span>Expedia</div>
+      <div class="platform-filter" data-platform="trip"><span class="pf-icon">🌏</span>Trip.com</div>
+      <div class="platform-filter" data-platform="airbnb"><span class="pf-icon">🏡</span>Airbnb</div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Location</div>
+      <div class="filter-chip" data-location="kuala-lumpur"><span class="chip-dot"></span>Kuala Lumpur</div>
+      <div class="filter-chip" data-location="penang"><span class="chip-dot"></span>Penang</div>
+      <div class="filter-chip" data-location="langkawi"><span class="chip-dot"></span>Langkawi</div>
+      <div class="filter-chip" data-location="sabah"><span class="chip-dot"></span>Sabah</div>
+      <div class="filter-chip" data-location="bali"><span class="chip-dot"></span>Bali</div>
+      <div class="filter-chip" data-location="singapore"><span class="chip-dot"></span>Singapore</div>
+    </div>
+  </aside>
+
+  <!-- MAIN FEED -->
+  <main class="feed">
+    <div class="feed-header">
+      <div>
+        <div class="feed-title">Discover Hotels</div>
+        <div class="feed-count" id="feed-count">12 properties found</div>
+      </div>
+      <div class="sort-row">
+        <button class="sort-btn active">Featured</button>
+        <button class="sort-btn">Newest</button>
+        <button class="sort-btn">A–Z</button>
+      </div>
+    </div>
+
+    <div class="hotel-grid" id="hotel-grid">
+      <!-- Cards injected by JS -->
+    </div>
+  </main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modal-close">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const hotels = [
+  {
+    id:1,
+    name:"The Pearl Langkawi",
+    location:"Langkawi, Kedah",
+    category:"resort",
+    stars:5,
+    photos:38,
+    desc:"Perched above the Andaman Sea, The Pearl Langkawi is a sanctuary of over-water villas and coral gardens. Wake up to the sound of waves beneath your floor and fall asleep under an infinite sky.",
+    thumb:"linear-gradient(135deg,#0d3b52 0%,#1a6a8a 45%,#2a9a7a 100%)",
+    gallery:[
+      "linear-gradient(135deg,#0d3b52,#1a6a8a)",
+      "linear-gradient(135deg,#1a6a8a,#2a9ab0)",
+      "linear-gradient(135deg,#0d5252,#1a8a7a)",
+      "linear-gradient(135deg,#2a6a0d,#4a9a2a)",
+      "linear-gradient(135deg,#3b2d0d,#6a5a2a)",
+    ],
+    booking:{booking:"https://booking.com",traveloka:"https://traveloka.com",agoda:"https://agoda.com",expedia:"https://expedia.com"},
+    social:{instagram:"https://instagram.com",tiktok:"https://tiktok.com",facebook:"https://facebook.com",youtube:"https://youtube.com",whatsapp:"https://wa.me/60123456789"},
+    videos:[
+      {label:"Resort Overview · 3:40",thumb:"linear-gradient(135deg,#0d3b52,#1a6a8a)"},
+      {label:"Underwater Bungalow · 2:15",thumb:"linear-gradient(135deg,#1a4a6a,#2a8a9a)"},
+    ]
+  },
+  {
+    id:2,
+    name:"Kuala Lumpur Grand",
+    location:"KLCC, Kuala Lumpur",
+    category:"city",
+    stars:5,
+    photos:52,
+    desc:"Soaring 52 floors above the iconic twin towers, KL Grand delivers cosmopolitan luxury with a panoramic rooftop infinity pool and world-class Michelin-starred dining at the heart of the city.",
+    thumb:"linear-gradient(135deg,#1a1a3d 0%,#2d2d6e 45%,#8a3d9a 100%)",
+    gallery:[
+      "linear-gradient(135deg,#1a1a3d,#2d2d6e)",
+      "linear-gradient(135deg,#2d2d6e,#4d4d9a)",
+      "linear-gradient(135deg,#3d1a6e,#6e2d9a)",
+      "linear-gradient(135deg,#1a0d3b,#3b1a6a)",
+      "linear-gradient(135deg,#0d1a3b,#1a3b6a)",
+    ],
+    booking:{booking:"https://booking.com",traveloka:"https://traveloka.com",trip:"https://trip.com"},
+    social:{instagram:"https://instagram.com",facebook:"https://facebook.com",youtube:"https://youtube.com"},
+    videos:[
+      {label:"City View Suite · 2:50",thumb:"linear-gradient(135deg,#1a1a3d,#2d2d6e)"},
+      {label:"Rooftop Pool · 1:30",thumb:"linear-gradient(135deg,#2d1a4d,#4d2d7a)"},
+    ]
+  },
+  {
+    id:3,
+    name:"Eastern & Oriental",
+    location:"George Town, Penang",
+    category:"heritage",
+    stars:5,
+    photos:44,
+    desc:"A living legend since 1885. The Eastern & Oriental Hotel is Penang's most storied address — grand colonial architecture, private seafront esplanade, and suites that have hosted royalty and literary giants alike.",
+    thumb:"linear-gradient(135deg,#3d2200 0%,#7a4400 45%,#c8a96e 100%)",
+    gallery:[
+      "linear-gradient(135deg,#3d2200,#7a4400)",
+      "linear-gradient(135deg,#7a4400,#aa6600)",
+      "linear-gradient(135deg,#4d2d00,#8a5500)",
+      "linear-gradient(135deg,#2d1a00,#6a3a00)",
+      "linear-gradient(135deg,#5a3300,#9a6600)",
+    ],
+    booking:{booking:"https://booking.com",agoda:"https://agoda.com",expedia:"https://expedia.com"},
+    social:{instagram:"https://instagram.com",facebook:"https://facebook.com",whatsapp:"https://wa.me/6041234567"},
+    videos:[
+      {label:"Heritage Suite Tour · 4:10",thumb:"linear-gradient(135deg,#3d2200,#7a4400)"},
+      {label:"Seafront Esplanade · 2:05",thumb:"linear-gradient(135deg,#4d3300,#8a6600)"},
+    ]
+  },
+  {
+    id:4,
+    name:"Alila Seminyak",
+    location:"Seminyak, Bali",
+    category:"boutique",
+    stars:5,
+    photos:61,
+    desc:"Minimalist Balinese architecture meets the raw power of the Indian Ocean. Alila Seminyak's cliff-edge infinity pool and open-air suites offer front-row seats to some of the world's most legendary sunsets.",
+    thumb:"linear-gradient(135deg,#2d1a00 0%,#6e3d00 35%,#d4742a 100%)",
+    gallery:[
+      "linear-gradient(135deg,#2d1a00,#6e3d00)",
+      "linear-gradient(135deg,#6e3d00,#aa6a00)",
+      "linear-gradient(135deg,#4d2a00,#8a5200)",
+      "linear-gradient(135deg,#3d2d00,#7a5a00)",
+      "linear-gradient(135deg,#1a1200,#4a3200)",
+    ],
+    booking:{booking:"https://booking.com",traveloka:"https://traveloka.com",agoda:"https://agoda.com",trip:"https://trip.com",airbnb:"https://airbnb.com"},
+    social:{instagram:"https://instagram.com",tiktok:"https://tiktok.com",facebook:"https://facebook.com",youtube:"https://youtube.com"},
+    videos:[
+      {label:"Cliff Suite Walkthrough · 3:20",thumb:"linear-gradient(135deg,#2d1a00,#6e3d00)"},
+      {label:"Sunset at Alila · 2:45",thumb:"linear-gradient(135deg,#4d2d00,#9a6a00)"},
+    ]
+  },
+  {
+    id:5,
+    name:"Gayana Eco Resort",
+    location:"Gaya Island, Sabah",
+    category:"resort",
+    stars:5,
+    photos:29,
+    desc:"Floating above the crystal waters of Gaya Island, Gayana's water chalets are surrounded by a living marine park. The world's only eco-resort-based restoration programme for giant clams lies right beneath your deck.",
+    thumb:"linear-gradient(135deg,#003d2d 0%,#006a52 45%,#00c896 100%)",
+    gallery:[
+      "linear-gradient(135deg,#003d2d,#006a52)",
+      "linear-gradient(135deg,#006a52,#009a7a)",
+      "linear-gradient(135deg,#004d3a,#008a6a)",
+      "linear-gradient(135deg,#002d20,#005a40)",
+      "linear-gradient(135deg,#005a44,#00aa82)",
+    ],
+    booking:{booking:"https://booking.com",agoda:"https://agoda.com"},
+    social:{instagram:"https://instagram.com",facebook:"https://facebook.com",whatsapp:"https://wa.me/6088123456"},
+    videos:[
+      {label:"Eco Chalet Tour · 2:55",thumb:"linear-gradient(135deg,#003d2d,#006a52)"},
+      {label:"Diving & Marine Life · 3:40",thumb:"linear-gradient(135deg,#004d3a,#009a7a)"},
+    ]
+  },
+  {
+    id:6,
+    name:"Marina Bay Sands",
+    location:"Marina Bay, Singapore",
+    category:"city",
+    stars:5,
+    photos:88,
+    desc:"An architectural marvel that redefined a city's skyline. The iconic SkyPark atop three towers houses the world's most famous infinity pool, with an unobstructed panorama of the entire Singapore skyline.",
+    thumb:"linear-gradient(135deg,#001a3d 0%,#003d7a 45%,#0a7ac8 100%)",
+    gallery:[
+      "linear-gradient(135deg,#001a3d,#003d7a)",
+      "linear-gradient(135deg,#003d7a,#006aaa)",
+      "linear-gradient(135deg,#001d4d,#004d8a)",
+      "linear-gradient(135deg,#000d2a,#002a5a)",
+      "linear-gradient(135deg,#003060,#0060aa)",
+    ],
+    booking:{booking:"https://booking.com",traveloka:"https://traveloka.com",agoda:"https://agoda.com",expedia:"https://expedia.com",trip:"https://trip.com"},
+    social:{instagram:"https://instagram.com",tiktok:"https://tiktok.com",facebook:"https://facebook.com",youtube:"https://youtube.com",whatsapp:"https://wa.me/6565551234"},
+    videos:[
+      {label:"SkyPark Infinity Pool · 4:00",thumb:"linear-gradient(135deg,#001a3d,#003d7a)"},
+      {label:"Property Highlights · 5:10",thumb:"linear-gradient(135deg,#003d7a,#006aaa)"},
+    ]
+  },
+  {
+    id:7,
+    name:"Tanjong Jara Resort",
+    location:"Dungun, Terengganu",
+    category:"heritage",
+    stars:5,
+    photos:33,
+    desc:"Recipient of numerous world's best awards, Tanjong Jara brings 17th-century Malay palace architecture to a pristine East Coast beach. Its spa, Ibu Bumi, is one of Southeast Asia's most acclaimed wellness destinations.",
+    thumb:"linear-gradient(135deg,#1a0d00 0%,#4d2d00 45%,#aa7a2a 100%)",
+    gallery:[
+      "linear-gradient(135deg,#1a0d00,#4d2d00)",
+      "linear-gradient(135deg,#4d2d00,#7a5200)",
+      "linear-gradient(135deg,#2d1a00,#6a4200)",
+      "linear-gradient(135deg,#3d2200,#7a4d00)",
+      "linear-gradient(135deg,#0d0a00,#3a2500)",
+    ],
+    booking:{booking:"https://booking.com",traveloka:"https://traveloka.com",expedia:"https://expedia.com"},
+    social:{instagram:"https://instagram.com",facebook:"https://facebook.com"},
+    videos:[
+      {label:"East Coast Getaway · 3:15",thumb:"linear-gradient(135deg,#1a0d00,#4d2d00)"},
+      {label:"Ibu Bumi Spa · 2:30",thumb:"linear-gradient(135deg,#2d1a00,#6a4200)"},
+    ]
+  },
+  {
+    id:8,
+    name:"Ritz-Carlton Langkawi",
+    location:"Pantai Kok, Langkawi",
+    category:"resort",
+    stars:5,
+    photos:74,
+    desc:"Nestled in a protected UNESCO-listed rainforest, Ritz-Carlton Langkawi's villas and overwater bungalows hover above an ancient jungle canopy that opens to a pristine turquoise bay.",
+    thumb:"linear-gradient(135deg,#0d2d00 0%,#1e5a00 45%,#3aaa2a 100%)",
+    gallery:[
+      "linear-gradient(135deg,#0d2d00,#1e5a00)",
+      "linear-gradient(135deg,#1e5a00,#2a8a00)",
+      "linear-gradient(135deg,#1a3d00,#2a6a00)",
+      "linear-gradient(135deg,#0a2000,#1a4a00)",
+      "linear-gradient(135deg,#2a4d00,#3a7a00)",
+    ],
+    booking:{booking:"https://booking.com",agoda:"https://agoda.com",expedia:"https://expedia.com",trip:"https://trip.com"},
+    social:{instagram:"https://instagram.com",tiktok:"https://tiktok.com",facebook:"https://facebook.com",youtube:"https://youtube.com",whatsapp:"https://wa.me/60412345678"},
+    videos:[
+      {label:"Rainforest Villa · 3:55",thumb:"linear-gradient(135deg,#0d2d00,#1e5a00)"},
+      {label:"Overwater Bungalow · 2:20",thumb:"linear-gradient(135deg,#1a3d00,#2a6a00)"},
+    ]
+  },
+  {
+    id:9,
+    name:"Berjaya Tioman Resort",
+    location:"Tioman Island, Pahang",
+    category:"resort",
+    stars:4,
+    photos:27,
+    desc:"Tioman's original luxury address — a collection of chalets and villas scattered along a horseshoe bay fringed with jungle. Dive sites rated among Asia's top ten are steps from your front door.",
+    thumb:"linear-gradient(135deg,#003340 0%,#006680 45%,#00bcd4 100%)",
+    gallery:[
+      "linear-gradient(135deg,#003340,#006680)",
+      "linear-gradient(135deg,#006680,#009ab0)",
+      "linear-gradient(135deg,#004450,#008090)",
+      "linear-gradient(135deg,#002233,#005566)",
+      "linear-gradient(135deg,#005060,#009090)",
+    ],
+    booking:{booking:"https://booking.com",traveloka:"https://traveloka.com",agoda:"https://agoda.com"},
+    social:{instagram:"https://instagram.com",facebook:"https://facebook.com",whatsapp:"https://wa.me/609123456"},
+    videos:[
+      {label:"Island Chalet Tour · 2:40",thumb:"linear-gradient(135deg,#003340,#006680)"},
+      {label:"Snorkelling Guide · 3:05",thumb:"linear-gradient(135deg,#004450,#008090)"},
+    ]
+  },
+  {
+    id:10,
+    name:"Shangri-La Rasa Ria",
+    location:"Pantai Dalit, Sabah",
+    category:"resort",
+    stars:5,
+    photos:58,
+    desc:"Home to an on-site orangutan care and conservation programme, Rasa Ria fuses world-class resort luxury with genuine wildlife conservation across 64 acres of protected nature reserve.",
+    thumb:"linear-gradient(135deg,#1a2d00 0%,#3a5a00 45%,#8aaa2a 100%)",
+    gallery:[
+      "linear-gradient(135deg,#1a2d00,#3a5a00)",
+      "linear-gradient(135deg,#3a5a00,#5a8a00)",
+      "linear-gradient(135deg,#2a3d00,#4a6a00)",
+      "linear-gradient(135deg,#0d1a00,#2a3a00)",
+      "linear-gradient(135deg,#3a5000,#6a8000)",
+    ],
+    booking:{booking:"https://booking.com",traveloka:"https://traveloka.com",agoda:"https://agoda.com",expedia:"https://expedia.com",trip:"https://trip.com",airbnb:"https://airbnb.com"},
+    social:{instagram:"https://instagram.com",tiktok:"https://tiktok.com",facebook:"https://facebook.com",youtube:"https://youtube.com"},
+    videos:[
+      {label:"Orangutan Sanctuary · 4:30",thumb:"linear-gradient(135deg,#1a2d00,#3a5a00)"},
+      {label:"Beach Resort Tour · 3:10",thumb:"linear-gradient(135deg,#2a3d00,#4a6a00)"},
+    ]
+  },
+  {
+    id:11,
+    name:"Capella Singapore",
+    location:"Sentosa Island, Singapore",
+    category:"boutique",
+    stars:5,
+    photos:66,
+    desc:"Occupying a lush Sentosa hillside with views of the South China Sea, Capella Singapore — designed by Sir Norman Foster — houses just 112 rooms and villas, ensuring every guest receives butler service and complete privacy.",
+    thumb:"linear-gradient(135deg,#1a0020 0%,#3d0055 45%,#9a00cc 100%)",
+    gallery:[
+      "linear-gradient(135deg,#1a0020,#3d0055)",
+      "linear-gradient(135deg,#3d0055,#6a0088)",
+      "linear-gradient(135deg,#2a0033,#5a0077)",
+      "linear-gradient(135deg,#0d0015,#2a0040)",
+      "linear-gradient(135deg,#330044,#660099)",
+    ],
+    booking:{booking:"https://booking.com",agoda:"https://agoda.com",expedia:"https://expedia.com",trip:"https://trip.com"},
+    social:{instagram:"https://instagram.com",facebook:"https://facebook.com",youtube:"https://youtube.com"},
+    videos:[
+      {label:"Colonial Villa · 3:00",thumb:"linear-gradient(135deg,#1a0020,#3d0055)"},
+      {label:"Auriga Spa · 2:25",thumb:"linear-gradient(135deg,#2a0033,#5a0077)"},
+    ]
+  },
+  {
+    id:12,
+    name:"The Datai Langkawi",
+    location:"Datai Bay, Langkawi",
+    category:"villa",
+    stars:5,
+    photos:49,
+    desc:"Hidden within a 10-million-year-old rainforest on Langkawi's northwest shore, The Datai sits above the pristine Datai Bay. Its jungle villas — connected by elevated walkways — are home to dusky leaf monkeys and rare hornbills.",
+    thumb:"linear-gradient(135deg,#001a10 0%,#003d28 45%,#00aa7a 100%)",
+    gallery:[
+      "linear-gradient(135deg,#001a10,#003d28)",
+      "linear-gradient(135deg,#003d28,#006a4a)",
+      "linear-gradient(135deg,#002a1a,#005a3a)",
+      "linear-gradient(135deg,#001408,#003020)",
+      "linear-gradient(135deg,#003a2a,#007055)",
+    ],
+    booking:{booking:"https://booking.com",traveloka:"https://traveloka.com",agoda:"https://agoda.com",expedia:"https://expedia.com"},
+    social:{instagram:"https://instagram.com",tiktok:"https://tiktok.com",facebook:"https://facebook.com",youtube:"https://youtube.com",whatsapp:"https://wa.me/604123456"},
+    videos:[
+      {label:"Rainforest Arrival · 3:45",thumb:"linear-gradient(135deg,#001a10,#003d28)"},
+      {label:"Tree Villa Tour · 2:50",thumb:"linear-gradient(135deg,#002a1a,#005a3a)"},
+    ]
+  },
+];
+
+const platformNames = {
+  booking:"Booking.com", traveloka:"Traveloka", agoda:"Agoda",
+  expedia:"Expedia", trip:"Trip.com", airbnb:"Airbnb"
+};
+const platformIcons = {
+  booking:"🌐", traveloka:"✈️", agoda:"🗝️",
+  expedia:"💼", trip:"🌏", airbnb:"🏡"
+};
+const socialNames = {
+  instagram:"Instagram", tiktok:"TikTok", facebook:"Facebook",
+  youtube:"YouTube", whatsapp:"WhatsApp"
+};
+const socialIcons = {
+  instagram:"📸", tiktok:"🎵", facebook:"📘",
+  youtube:"▶️", whatsapp:"💬"
+};
+const stars = n => "★".repeat(n) + "☆".repeat(5-n);
+
+// ── RENDER CARD ──
+function renderCard(h){
+  const bookingKeys = Object.keys(h.booking);
+  const tags = bookingKeys.slice(0,4).map(k =>
+    `<span class="ptag ${k}">${platformIcons[k]} ${platformNames[k]}</span>`
+  ).join('');
+  return `
+    <div class="hotel-card" data-id="${h.id}">
+      <div class="card-thumb">
+        <div class="thumb-img" style="background:${h.thumb}"></div>
+        <div class="thumb-overlay"></div>
+        <div class="star-badge">${h.stars}★</div>
+        <div class="photo-count">📷 ${h.photos}</div>
+        <div class="platform-tags">${tags}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-location">📍 ${h.location}</div>
+        <div class="card-name">${h.name}</div>
+        <div class="card-desc">${h.desc}</div>
+        <div class="card-meta">
+          <div class="card-social">
+            ${Object.keys(h.social).slice(0,4).map(s=>`<div class="social-icon-sm">${socialIcons[s]}</div>`).join('')}
+          </div>
+          <div class="card-cta">View Hotel →</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── RENDER MODAL ──
+function renderModal(h){
+  const galleryHTML = h.gallery.map(g =>
+    `<div class="gallery-strip-item"><div class="gallery-strip-img" style="background:${g}"></div></div>`
+  ).join('');
+
+  const bookingHTML = Object.entries(h.booking).map(([k,url])=>
+    `<a href="${url}" target="_blank" rel="noopener" class="booking-btn">
+      <span class="b-icon">${platformIcons[k]}</span>
+      <span class="b-name">${platformNames[k]}</span>
+      <span class="b-arrow">↗</span>
+    </a>`
+  ).join('');
+
+  const socialHTML = Object.entries(h.social).map(([k,url])=>
+    `<a href="${url}" target="_blank" rel="noopener" class="social-btn">
+      <span class="s-icon">${socialIcons[k]}</span>${socialNames[k]}
+    </a>`
+  ).join('');
+
+  const videoHTML = h.videos.map(v=>
+    `<div class="video-thumb-card">
+      <div class="video-thumb-img" style="background:${v.thumb}"></div>
+      <div class="video-play-overlay"><div class="play-circle">▶</div></div>
+      <div class="video-label">${v.label}</div>
+    </div>`
+  ).join('');
+
+  return `
+    <div class="modal-hero">
+      <div class="modal-hero-img" style="background:${h.thumb}"></div>
+      <div class="modal-hero-overlay"></div>
+      <div class="modal-hero-content">
+        <div class="modal-location">📍 ${h.location}</div>
+        <div class="modal-name">${h.name}</div>
+        <div class="modal-stars">${stars(h.stars)}</div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="gallery-strip">${galleryHTML}</div>
+      <div class="modal-section-title">About This Hotel</div>
+      <p class="modal-desc">${h.desc}</p>
+      <div class="modal-section-title">Book Your Stay</div>
+      <div class="booking-platforms">${bookingHTML}</div>
+      <div class="modal-section-title">Videos</div>
+      <div class="video-grid">${videoHTML}</div>
+      <div class="modal-section-title">Follow &amp; Connect</div>
+      <div class="social-row">${socialHTML}</div>
+    </div>`;
+}
+
+// ── STATE & RENDER ──
+let activeCategory = 'all';
+let activePlatform = null;
+let searchQuery = '';
+
+function getFiltered(){
+  return hotels.filter(h=>{
+    const catOk = activeCategory === 'all' || h.category === activeCategory;
+    const platOk = !activePlatform || h.booking[activePlatform];
+    const searchOk = !searchQuery ||
+      h.name.toLowerCase().includes(searchQuery) ||
+      h.location.toLowerCase().includes(searchQuery);
+    return catOk && platOk && searchOk;
+  });
+}
+
+function renderGrid(){
+  const filtered = getFiltered();
+  const grid = document.getElementById('hotel-grid');
+  document.getElementById('feed-count').textContent = `${filtered.length} ${filtered.length===1?'property':'properties'} found`;
+  grid.innerHTML = filtered.map(renderCard).join('');
+  grid.querySelectorAll('.hotel-card').forEach(card=>{
+    card.addEventListener('click',()=>{
+      const hotel = hotels.find(h=>h.id===+card.dataset.id);
+      openModal(hotel);
+    });
+  });
+}
+
+// ── MODAL ──
+const backdrop = document.getElementById('modal-backdrop');
+const modalContent = document.getElementById('modal-content');
+
+function openModal(hotel){
+  modalContent.innerHTML = renderModal(hotel);
+  backdrop.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  backdrop.scrollTop = 0;
+}
+
+function closeModal(){
+  backdrop.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modal-close').addEventListener('click', closeModal);
+backdrop.addEventListener('click', e=>{ if(e.target===backdrop) closeModal(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+// ── FILTERS ──
+document.querySelectorAll('.filter-chip[data-filter]').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-chip[data-filter]').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    activeCategory = chip.dataset.filter;
+    renderGrid();
+  });
+});
+
+document.querySelectorAll('.platform-filter').forEach(pf=>{
+  pf.addEventListener('click',()=>{
+    if(pf.classList.contains('active')){
+      pf.classList.remove('active');
+      activePlatform = null;
+    } else {
+      document.querySelectorAll('.platform-filter').forEach(p=>p.classList.remove('active'));
+      pf.classList.add('active');
+      activePlatform = pf.dataset.platform;
+    }
+    renderGrid();
+  });
+});
+
+document.querySelectorAll('.sort-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// ── SEARCH ──
+document.getElementById('search-input').addEventListener('input', e=>{
+  searchQuery = e.target.value.toLowerCase().trim();
+  renderGrid();
+});
+
+// ── INIT ──
+renderGrid();
+</script>
+</body>
+</html>
