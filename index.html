@@ -62,7 +62,7 @@
             <h1 class="text-xl font-extrabold tracking-tight text-stone-900 flex items-center leading-none">
               Stay<span class="text-amber-600 font-medium">Connect</span>
             </h1>
-            <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold mt-0.5">by Lucky Agency</p>
+            <p class="text-[10px] uppercase tracking-widest text-stone-400 font-bold mt-0.5">Luxury Directory & Search</p>
           </div>
         </div>
         <span class="md:hidden text-xs bg-amber-50 px-2.5 py-1 rounded-full text-amber-700 font-semibold border border-amber-200/50">
@@ -94,6 +94,8 @@
         </div>
         <span class="h-6 w-px bg-stone-200"></span>
         <div class="flex items-center gap-2 pr-1">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-xs text-stone-600 font-semibold uppercase tracking-wider">Light Themed Edition</span>
         </div>
       </div>
     </header>
@@ -177,18 +179,33 @@
             </h2>
           </div>
 
-          <div class="flex items-center gap-3">
-            <span class="text-xs text-stone-400 font-bold uppercase tracking-wider whitespace-nowrap">Sort By</span>
-            <select
-              id="sort-select"
-              class="text-xs bg-stone-100 hover:bg-stone-200 border-none rounded-lg px-3 py-2 text-stone-700 outline-none font-semibold cursor-pointer transition-colors"
-            >
-              <option value="featured">Featured Collection</option>
-              <option value="lowest">Price: Low to High</option>
-              <option value="highest">Price: High to Low</option>
-              <option value="rating">Rating Score (High-Low)</option>
-              <option value="alphabetical">A — Z Alphabetical</option>
-            </select>
+          <div class="flex flex-wrap items-center gap-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-stone-400 font-bold uppercase tracking-wider whitespace-nowrap">Currency</span>
+              <select
+                id="currency-select"
+                class="text-xs bg-stone-100 hover:bg-stone-200 border-none rounded-lg px-3 py-2 text-stone-700 outline-none font-semibold cursor-pointer transition-colors"
+              >
+                <option value="MYR" selected>RM (MYR)</option>
+                <option value="SGD">S$ (SGD)</option>
+                <option value="IDR">Rp (IDR)</option>
+                <option value="USD">$ (USD)</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-stone-400 font-bold uppercase tracking-wider whitespace-nowrap">Sort By</span>
+              <select
+                id="sort-select"
+                class="text-xs bg-stone-100 hover:bg-stone-200 border-none rounded-lg px-3 py-2 text-stone-700 outline-none font-semibold cursor-pointer transition-colors"
+              >
+                <option value="featured">Featured Collection</option>
+                <option value="lowest">Price: Low to High</option>
+                <option value="highest">Price: High to Low</option>
+                <option value="rating">Rating Score (High-Low)</option>
+                <option value="alphabetical">A — Z Alphabetical</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -513,7 +530,7 @@
             { label: "Coral Reef Snorkeling & Dining Experience Scene", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=300&q=85" }
           ],
           priceRange: "$$$$",
-          startingPrice: 420,
+          startingPrice: 115,
           amenities: ["Ocean View", "Private Beach", "Overwater Villa", "Infinity Pool", "24/7 Butler Service", "Full Spa"]
         },
         {
@@ -547,7 +564,7 @@
             { label: "Michelin Guide Dining & Rooftop Skybar Vibe", image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=300&q=85" }
           ],
           priceRange: "$$$",
-          startingPrice: 280,
+          startingPrice: 75,
           amenities: ["Rooftop Pool", "City View", "Sky Nightclub", "Spa", "All-Glass Gym", "Metro Link"]
         },
         {
@@ -581,7 +598,7 @@
             { label: "Maritime High Tea & Seafaring Garden Lounge", image: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=300&q=85" }
           ],
           priceRange: "$$$",
-          startingPrice: 240,
+          startingPrice: 65,
           amenities: ["Colonial Decor", "Ocean Esplanade", "Afternoon Tea", "Classical Library", "Personal Butler"]
         },
         {
@@ -618,7 +635,7 @@
             { label: "Boutique Ocean Suite In-Depth Walkthrough", image: "https://images.unsplash.com/photo-1527853787696-f7be74f2e39a?auto=format&fit=crop&w=300&q=85" }
           ],
           priceRange: "$$$$",
-          startingPrice: 390,
+          startingPrice: 105,
           amenities: ["Oceanfront View", "Cliffside Pool", "Organic Restaurant", "Yoga Pavilion", "Eco Friendly"]
         },
         {
@@ -651,7 +668,7 @@
             { label: "Giant Clam Conservation & Eco Research Labs", image: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=300&q=85" }
           ],
           priceRange: "$$$",
-          startingPrice: 310,
+          startingPrice: 85,
           amenities: ["Water Villas", "Reef Diving", "Clam Sanctuary", "Jungle Trails", "Kayaking", "Spa"]
         },
         {
@@ -689,7 +706,7 @@
             { label: "High-Rise Suite Vista & Night Gardens Show", image: "https://images.unsplash.com/photo-1494949642610-fc9965da9a38?auto=format&fit=crop&w=300&q=85" }
           ],
           priceRange: "$$$$$",
-          startingPrice: 580,
+          startingPrice: 145,
           amenities: ["World Class Pool", "Cityscape Skydeck", "Celebrity Dining", "Mega-Mall Access", "Luxury Spa", "Sands Club Lounge"]
         },
         {
@@ -722,7 +739,7 @@
             { label: "Traditional Sucimurni Herbs Spa Treatment Demo", image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=300&q=85" }
           ],
           priceRange: "$$$",
-          startingPrice: 220,
+          startingPrice: 60,
           amenities: ["Royal Architecture", "Cultural Immersion", "Holistic Spa", "Sunrise Yoga", "Golden Reefs"]
         },
         {
@@ -759,7 +776,7 @@
             { label: "Rainforest canopy Lounge Vibe & Sunrise Yoga", image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=300&q=85" }
           ],
           priceRange: "$$$$$",
-          startingPrice: 510,
+          startingPrice: 130,
           amenities: ["Ancient Jungle Setting", "Private Plunge Pool", "Villages Styling", "UNESCO Geopark Tour", "Hammock Nets"]
         },
         {
@@ -793,7 +810,7 @@
             { label: "Rustic Wooden Chalet Shoreline Walk", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=300&q=85" }
           ],
           priceRange: "$$",
-          startingPrice: 150,
+          startingPrice: 50,
           amenities: ["Reef Snorkeling", "Beachfront Chalet", "PADI Diving", "Volleyball Courts", "Family Pool"]
         },
         {
@@ -831,7 +848,7 @@
             { label: "Pristine Dalit Beach Club & Seaside Golf Course", image: "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&w=300&q=85" }
           ],
           priceRange: "$$$$",
-          startingPrice: 340,
+          startingPrice: 95,
           amenities: ["Orangutan Reserve", "Signature Golf", "Seaside Dining", "Nature Trails", "Canopy Walkway", "Water Sports"]
         },
         {
@@ -866,7 +883,7 @@
             { label: "Award-Winning Auriga Wellness Spa In-Depth", image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=300&q=85" }
           ],
           priceRange: "$$$$$",
-          startingPrice: 640,
+          startingPrice: 150,
           amenities: ["Foster Architecture", "Ocean Manor Views", "Private Jacuzzi", "Dedicated Butler", "Auriga Wellness", "Library Lounge"]
         },
         {
@@ -902,7 +919,7 @@
             { label: "Luxury Canopy Pool Villa & Wilderness Spa Rituals", image: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?auto=format&fit=crop&w=300&q=85" }
           ],
           priceRange: "$$$$$",
-          startingPrice: 540,
+          startingPrice: 140,
           amenities: ["Rainforest Immersion", "Private Beach", "Award-Winning Dining", "Naturalist Canopy Walks", "Traditional Spa"]
         }
       ];
@@ -934,11 +951,11 @@
       };
 
       const socialIcons = {
-        instagram: "📸",
-        tiktok: "🎵",
-        facebook: "📘",
-        youtube: "▶️",
-        whatsapp: "💬"
+        instagram: `<svg class="w-4 h-4 text-[#E1306C] fill-current inline-block" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="vertical-align: -0.125em;"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>`,
+        tiktok: `<svg class="w-4 h-4 text-black fill-current inline-block" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="vertical-align: -0.125em;"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.86-.74-3.94-1.74-.22-.2-.43-.4-.63-.62v7.39c.04 2.44-1.02 4.88-2.97 6.36-2.61 2.05-6.46 2.22-9.24.4-2.45-1.55-3.8-4.48-3.41-7.38.33-2.91 2.53-5.4 5.42-5.93 1.07-.21 2.19-.1 3.22.28V12c-1.34-.41-2.91-.12-4 .77-1.16.94-1.57 2.58-1.07 4 .44 1.35 1.82 2.29 3.24 2.22 1.7-.01 3.1-1.46 3.11-3.17V.02z"/></svg>`,
+        facebook: `<svg class="w-4 h-4 text-[#1877F2] fill-current inline-block" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="vertical-align: -0.125em;"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`,
+        youtube: `<svg class="w-4 h-4 text-[#FF0000] fill-current inline-block" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="vertical-align: -0.125em;"><path d="M23.498 6.163a3.003 3.003 0 00-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.508a3.003 3.003 0 00-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 002.11 2.11c1.871.508 9.388.508 9.388.508s7.517 0 9.388-.508a3.002 3.002 0 002.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`,
+        whatsapp: `<svg class="w-4 h-4 text-[#25D366] fill-current inline-block" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="vertical-align: -0.125em;"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.262 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.738-1.45L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.97-1.861-1.867-4.332-2.899-6.969-2.9-5.443 0-9.87 4.372-9.874 9.802-.001 1.737.457 3.432 1.328 4.936l-.991 3.626 3.7-.946zm11.233-7.653c-.307-.154-1.82-.899-2.101-1.002-.281-.102-.485-.154-.689.154-.204.307-.79.1-.969 1.157-.179.1-.358.154-.665.001-.307-.154-1.298-.479-2.473-1.528-.915-.815-1.531-1.822-1.71-2.129-.18-.307-.018-.473.135-.626.137-.137.307-.358.461-.537.154-.179.204-.307.307-.512.102-.205.051-.384-.025-.537-.077-.154-.689-1.66-1.023-2.47-.306-.74-.613-.611-.84-.611-.205 0-.441-.01-.678-.01-.237 0-.626.089-.95.442-.325.353-1.231 1.205-1.231 2.93 0 1.725 1.258 3.393 1.435 3.629.177.235 2.477 3.784 5.998 5.302.837.362 1.49.578 2.001.739.84.267 1.61.229 2.214.139.673-.101 1.82-.743 2.076-1.46.255-.717.255-1.33.179-1.46-.076-.13-.281-.205-.588-.359z"/></svg>`
       };
 
       // ── DYNAMIC RUNTIME PREFERENCES STATE ──
@@ -949,6 +966,42 @@
       let searchQuery = '';
       let sortBy = 'featured';
       let favorites = [];
+      let selectedCurrency = 'MYR';
+
+      const currencies = [
+        { code: 'MYR', symbol: 'RM ', rate: 4.72 },
+        { code: 'SGD', symbol: 'S$', rate: 1.35 },
+        { code: 'IDR', symbol: 'Rp ', rate: 16250 },
+        { code: 'USD', symbol: '$', rate: 1.00 }
+      ];
+
+      function getFormattedPrice(priceInUSD) {
+        const curr = currencies.find(c => c.code === selectedCurrency) || currencies[0];
+        const converted = priceInUSD * curr.rate;
+        if (selectedCurrency === 'IDR') {
+          const rounded = Math.round(converted / 1000) * 1000;
+          return `${curr.symbol}${rounded.toLocaleString()}`;
+        }
+        return `${curr.symbol}${Math.round(converted).toLocaleString()}`;
+      }
+
+      function getTodayAndTomorrowDates() {
+        const today = new Date();
+        const tomorrow = new Date();
+        tomorrow.setDate(today.getDate() + 1);
+
+        const format = (d) => {
+          const year = d.getFullYear();
+          const month = String(d.getMonth() + 1).padStart(2, '0');
+          const day = String(d.getDate()).padStart(2, '0');
+          return `${year}-${month}-${day}`;
+        };
+
+        return {
+          today: format(today),
+          tomorrow: format(tomorrow)
+        };
+      }
 
       // Load favorites from localStorage if present
       try {
@@ -1324,7 +1377,7 @@
 
                 <!-- Price overlay display -->
                 <div class="absolute bottom-3 right-3 bg-amber-600 text-white rounded-lg px-2.5 py-1 text-xs font-bold font-mono tracking-tight shadow-md">
-                  $${hotel.startingPrice}+/nt
+                  ${getFormattedPrice(hotel.startingPrice)}+/nt
                 </div>
               </div>
 
@@ -1452,9 +1505,9 @@
         // Populate elements
         document.getElementById('calc-computed-nights').textContent = nights;
         document.getElementById('calc-computed-guests').textContent = guestsVal;
-        document.getElementById('calc-base-total').textContent = `$${baseTotal} USD`;
-        document.getElementById('calc-levy-total').textContent = `$${levyTotal} USD`;
-        document.getElementById('calc-ultimate-total').textContent = `$${ultimateTotal} USD`;
+        document.getElementById('calc-base-total').textContent = `${getFormattedPrice(baseTotal)}`;
+        document.getElementById('calc-levy-total').textContent = `${getFormattedPrice(levyTotal)}`;
+        document.getElementById('calc-ultimate-total').textContent = `${getFormattedPrice(ultimateTotal)}`;
       }
 
       // ── MODEL WINDOW ACTIONS ──
@@ -1468,7 +1521,7 @@
         document.getElementById('modal-title-caption').textContent = hotel.name;
         document.getElementById('modal-rating-badge').textContent = `${hotel.rating} ★ Rating`;
         document.getElementById('modal-stars-count').textContent = `${hotel.stars} Star Level`;
-        document.getElementById('modal-price-tier').textContent = `Starting at $${hotel.startingPrice} per night`;
+        document.getElementById('modal-price-tier').textContent = `Starting at ${getFormattedPrice(hotel.startingPrice)} per night`;
 
         // Render photo gallery strip
         const stripContainer = document.getElementById('modal-gallery-strip');
@@ -1599,9 +1652,9 @@
         `).join('');
 
         // Reset inputs on Stay Calculator
-        document.getElementById('calc-check-in').value = '2026-06-15';
-        document.getElementById('calc-check-out').value = '2026-06-20';
-        document.getElementById('calc-guests').value = '2026-06-20';
+        const defaultDates = getTodayAndTomorrowDates();
+        document.getElementById('calc-check-in').value = defaultDates.today;
+        document.getElementById('calc-check-out').value = defaultDates.tomorrow;
         document.getElementById('calc-guests').selectedIndex = 1; // default '2 Adult Guests'
         calculateStayEstimate();
 
@@ -1624,6 +1677,11 @@
 
       // ── BOOTSTRAP ATTACH GLOBAL LISTENERS ──
       function bootstrap() {
+        // Initialize dynamic date defaults
+        const defaultDates = getTodayAndTomorrowDates();
+        document.getElementById('calc-check-in').value = defaultDates.today;
+        document.getElementById('calc-check-out').value = defaultDates.tomorrow;
+
         // Reset trigger preference pills
         document.getElementById('reset-all-btn').addEventListener('click', () => {
           activeCategory = 'all';
@@ -1682,6 +1740,16 @@
         document.getElementById('sort-select').addEventListener('change', (e) => {
           sortBy = e.target.value;
           updateUI();
+        });
+
+        // Currency selector dropdown
+        document.getElementById('currency-select').addEventListener('change', (e) => {
+          selectedCurrency = e.target.value;
+          updateUI();
+          if (currentActiveHotel) {
+            document.getElementById('modal-price-tier').textContent = `Starting at ${getFormattedPrice(currentActiveHotel.startingPrice)} per night`;
+            calculateStayEstimate();
+          }
         });
 
         // Modal closed triggers
